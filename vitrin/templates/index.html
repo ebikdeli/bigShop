@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'vitrin/statics/css/style.css' %}">
+{% endblock head %}
+
+{% block title %}Welcome to BigShop!{% endblock title %}
+
+{% block content %}
+    <h1>Hello world</h1>
+    <p>Click on below button to receive answer from the server</p>
+    <button class="btn btn-info">Click</button>
+{% endblock content %}
+
+{% block scripts %}
+<script src="{% static 'vitrin/statics/js/script.js' %}"></script>
+{% endblock scripts %}

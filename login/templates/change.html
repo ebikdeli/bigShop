@@ -1,0 +1,41 @@
+{% extends 'templates/base.html' %}
+{% load static %}
+
+{% block title %}ثبت نام{% endblock %}
+
+{% block content %}
+    {% if request.user.username %}
+
+        {% if messages %}
+            {% for m in messages %}
+                <h2>{{ m }}</h2>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+        {% comment %}
+            <!-- This is a place for errors   -->
+            {% if signup_form.errors %}
+                <h1>{{ signup_form.error_class }}</h1>
+                {% for error in signup_form.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endcomment %}
+
+            <table>
+                {{ change_form.as_table }}
+            </table>
+
+        <input type="submit">
+
+        </form>
+
+
+    {% else %}
+        <h2>شما باید وارد حساب کاربری خود شوید. برای ورود <a href="{% url 'login:classic_login' %}">اینجا</a> کلیک کنید</h2>
+    {% endif %}
+{% endblock content %}

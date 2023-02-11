@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+    {{ form.media }}
+{% endblock head %}
+
+
+{% block title %}FAQ{% endblock title %}
+
+
+{% block search_panel %}{% endblock search_panel %}
+
+
+{% block content %}
+{% for faq in faqs %}
+    <h1>FAQ list:</h1>
+    <p>{{ forloop.counter }}- {{ faq.question.html | safe}}</p>
+    <p>A: {{ faq.answer.html | safe}}</p>
+{% empty %}
+    <h1>Absoulute no faqs</h1>
+{% endfor %}
+
+
+{% endblock content %}
+
+
+{% block scripts %}{% endblock scripts %}
