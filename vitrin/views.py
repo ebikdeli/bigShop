@@ -12,6 +12,7 @@ COOKIES = []
 
 def index(request):
     """Index page of the shop"""
+    print(request.META.get('HTTP_ACCEPT'))
     return render(request, 'vitrin/templates/index.html')
 
 
@@ -43,4 +44,5 @@ def ajax_response_test(request):
     # Test sending custom response headers
     request.META['NAME'] = 'EHSAN'
     data = {'msg': 'success', 'status': 'ok'}
+    print(request.META.get('HTTP_ACCEPT'))
     return JsonResponse(data=data, safe=False, headers={'NAME': 'EHSAN'})

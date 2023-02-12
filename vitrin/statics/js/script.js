@@ -1,8 +1,13 @@
 // When using Event Listeners, remember to first thing to do is to call preventDefault() for the eventObject
 // NOTE: With 'windows.location' we can get current site url, host, server and even redirect user to another url:
+// EG: redirect user to another url:   location.replace('http://127.0.0.1:8000/');
 // NOTE *: When using 'FormData' in 'POST' request, we should set 'Content-Type' header and let the 'fetch' decide what it should be because we received an error that documented in the followin address:
 // https://stackoverflow.com/questions/39280438/fetch-missing-boundary-in-multipart-form-data-post
-// EG: redirect user to another url:   location.replace('http://127.0.0.1:8000/');
+// NOTE: Question: How to know if a request, is Ajax call or a simple web request by the browser?
+// Answer: Most of Ajax technologies (Fetch for example) as for 'HTTP_ACCEPT' header, uses '*/*' by default. If we set request header 'Accept: application/json' for example,
+// ... then at server we receive 'HTTP_ACCEPT = 'pplication/json'. This way we know the request is Ajax call. But in ordinary web request by browser, value of 'HTTP_ACCEPT' is something like this in below:
+// ... text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+// https://stackoverflow.com/questions/8508602/check-if-request-is-ajax-in-python
 
 let body = document.getElementsByTagName('body');
 let btn = document.querySelector('button');
@@ -52,13 +57,15 @@ btn.addEventListener('click', e => {
     fetch(`http://127.0.0.1:8000/ajax-response-test?${dt}`,
     {
         method: 'POST',
+        // method: 'GET',
         body: form_data,
         // body: JSON.stringify({name:'ehsan', age: 30}),
         mode: 'same-origin',
         headers: {
             // 'Content-Type': 'application/json',     // Default value of the 'Content-Type' is 'text/plain'
             // 'Content-Type': 'application/x-www-form-urlencoded',     // When using FormData in "POST" request, we should not set 'Content-Type' because WebKitBoundaries will fail!!! and we must let the JS set that by default!
-            'X-CSRFToken': csrfToken
+            'X-CSRFToken': csrfToken,
+            // 'Accept': 'application/json'     It is very useful to inform the server what type of Response, the client expects to receive. specially when there are diffrent types of calls available like Ajax call, browser call and mobile device call
         },
     })
     .then(response => {
