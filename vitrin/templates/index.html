@@ -2,17 +2,30 @@
 {% load static %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'vitrin/statics/css/style.css' %}">
+<link rel="stylesheet" href="{% static 'vitrin/statics/css/style.css' %}" />
 {% endblock head %}
 
-{% block title %}Welcome to BigShop!{% endblock title %}
+{% block title %}Welcome to BigShop!{% endblock title %} 
 
 {% block content %}
     <h1>Hello world</h1>
     <p>Click on below button to receive answer from the server</p>
-    <button class="btn btn-info">Click</button>
+    <button class="btn btn-info my-2">Click</button>
+    <div>
+        <form name="form" action="" method="post">
+            {% csrf_token %}
+            <input type="text" name="last_name" placeholder="last name" id="" />
+            <input type="email" name="email" placeholder="email" id="" />
+            <input id="form-submit" type="submit" value="Submit" />
+            <br />
+            <small>This "submit" button does nothing actually just demonstrates using of
+            form validation handling mechanism!</small>
+        </form>
+    </div>
 {% endblock content %}
 
 {% block scripts %}
-<script src="{% static 'vitrin/statics/js/script.js' %}"></script>
+    <script src="{% static 'vitrin/statics/js/script.js' %}"></script>
+    {% comment %} <script src="{% static 'statics/js/js.cookie.mjs' %}" type='module'></script> {% endcomment %}
+    {% comment %} <script type='module' src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js" integrity="sha512-wT7uPE7tOP6w4o28u1DN775jYjHQApdBnib5Pho4RB0Pgd9y7eSkAV1BTqQydupYDB9GBhTcQQzyNMPMV3cAew==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> {% endcomment %}
 {% endblock scripts %}
