@@ -14,10 +14,3 @@ def change_unempty_stock_available(sender, instance=None, *args, **kwargs):
     """If 'stock' is not empty, turn is_available to True"""
     if instance.stock and not instance.is_available:
         instance.is_available = True
-
-
-@receiver(pre_save, sender='shop.Product')
-def calculate_price_end_after_price(sender, instance=None, **kwargs):
-    """Calculate 'price_end' afer 'price' value and discounts on the 'price'"""
-    # Implementing discounts later
-    instance.price_end = instance.price
