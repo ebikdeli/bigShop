@@ -205,8 +205,25 @@ REST_FRAMEWORK = {
 """
 
 
-# Cors headers settings
-CORS_ALLOW_ALL_ORIGINS = True
+# Cors headers settings (NOTE: Without 'cors', process on diffrent domains and ports could not speak to each other! 'same-origin' only enabled when two process work on same domain and port)
+# In ajax request using 'fetch' or any front techs like 'reqct', 'angular' or even an script with 'requests' library, we must enable 'CORS' for the server.
+# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    'http://127.0.0.1:5500',
+    'https://127.0.0.1:5500',
+]
+# * If we don't set 'CORS_ALLOW_CREDENTIALS = True', We will get this error on client side:
+# Access to fetch at 'http://127.0.0.1:8000/add_product_cart' from origin 'http://127.0.0.1:5500' has been blocked by CORS policy: The value of the 'Access-Control-Allow-Credentials' header in the response is '' which must be 'true' when the request's credentials mode is 'include'.
+# NOTE: Remember that without this field, any cookie sent by client, does not checked by server!
+CORS_ALLOW_CREDENTIALS = True
+
+# * To be able to let 'X-CSRFToken' header checked by server (this header sent by any client) we must 
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:5500",
+    'http://*:*'
+]
 
 
 # CKEditor settings
