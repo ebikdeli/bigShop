@@ -22,5 +22,12 @@ def add_product_cart(request):
     print(request.session.session_key)
     if request.method == 'POST':
         print(request.POST)
-        
         return JsonResponse(data={'msg': 'product added to cart', 'status': 200})
+
+
+# @csrf_exempt
+def delete_product_cart(request):
+    print(request.session.session_key)
+    if request.method == 'POST':
+        print(request.POST)
+        return JsonResponse(data={'msg': 'product deleted from the cart', 'status': 200})
