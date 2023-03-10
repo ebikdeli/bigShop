@@ -31,3 +31,11 @@ def delete_product_cart(request):
     if request.method == 'POST':
         print(request.POST)
         return JsonResponse(data={'msg': 'product deleted from the cart', 'status': 200})
+
+
+# @csrf_exempt
+def change_product_quantity_cart(request):
+    print(request.session.session_key)
+    if request.method == 'POST':
+        print(request.POST)
+        return JsonResponse(data={'msg': 'product quantity changed', 'status': 200})
