@@ -39,3 +39,11 @@ def change_product_quantity_cart(request):
     if request.method == 'POST':
         print(request.POST)
         return JsonResponse(data={'msg': 'product quantity changed', 'status': 200})
+
+
+# @csrf_exempt
+def signup(request):
+    print(request.session.session_key)
+    if request.method == 'POST':
+        print(request.POST)
+        return JsonResponse(data={'msg': 'user sign up data received', 'status': 200})
