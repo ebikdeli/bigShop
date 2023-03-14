@@ -47,3 +47,11 @@ def signup(request):
     if request.method == 'POST':
         print(request.POST)
         return JsonResponse(data={'msg': 'user sign up data received', 'status': 200})
+
+
+# @csrf_exempt
+def signin(request):
+    print(request.session.session_key)
+    if request.method == 'POST':
+        print(request.POST)
+        return JsonResponse(data={'msg': 'user sign in data received', 'status': 200})
