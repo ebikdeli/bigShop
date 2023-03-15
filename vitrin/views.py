@@ -8,6 +8,10 @@ def index(request):
     return render(request, 'vitrin/templates/index.html')
 
 
+def send_html(request):
+    html = '<h1>This comes from server</h1><br><p>Should know it</p>'
+    return HttpResponse(html)
+
 # * These hooks will be used to test against api hooks
 # @csrf_exempt
 def pr_data(request):
