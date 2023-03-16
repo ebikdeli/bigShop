@@ -59,3 +59,11 @@ def signin(request):
     if request.method == 'POST':
         print(request.POST)
         return JsonResponse(data={'msg': 'user sign in data received', 'status': 200})
+
+
+# @csrf_exempt
+def change_password(request):
+    print(request.session.session_key)
+    if request.method == 'POST':
+        print(request.POST)
+        return JsonResponse(data={'msg': 'user password change data received', 'status': 200})
