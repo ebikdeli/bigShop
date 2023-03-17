@@ -67,3 +67,21 @@ def change_password(request):
     if request.method == 'POST':
         print(request.POST)
         return JsonResponse(data={'msg': 'user password change data received', 'status': 200})
+
+
+# @csrf_exempt
+def edit_profile(request):
+    print(request.session.session_key)
+    if request.method == 'POST':
+        print(request.POST)
+        return JsonResponse(data={'msg': 'user edit profile data received', 'status': 200})
+
+
+# @csrf_exempt
+def edit_profile_image(request):
+    print(request.session.session_key)
+    if request.method == 'POST':
+        print(request.POST)
+        # Sended image(s) will be put in 'request.FILES'
+        print(request.FILES)
+        return JsonResponse(data={'msg': 'user edit profile image received', 'status': 200})
