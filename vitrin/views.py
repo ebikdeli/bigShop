@@ -5,6 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     """Index page of the shop"""
+    for k, v in request.headers.items():
+        print(k, ' ===> ', v)
     return render(request, 'vitrin/templates/index.html')
 
 
