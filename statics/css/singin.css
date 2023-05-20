@@ -1,0 +1,41 @@
+main{
+
+    height: 100vh;
+    width: auto;
+    background-image: url('../images/login-background.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: rgb(242, 246, 250);
+}
+
+::placeholder{
+    color: rgb(234, 234, 240);
+    font-size: 18px;
+    font-weight: 500;
+}
+
+input[name='email'], input[name='password']{
+    direction: ltr;
+    text-align: center;
+    width: 100%;
+    padding: 8px 10px;
+    background-color: rgb(38, 89, 133);
+    color: rgb(255, 253, 253);
+    font-size: 18px;
+    border-radius: 8px;
+    border-color: rgb(131, 133, 132);
+}
+
+input:focus{
+    background-color: rgb(211, 215, 215);
+    color: black;
+    font-size: 18px;
+}
+
+button[type='submit']{
+    /* color: beige; */
+    /* background-color: rgb(13, 177, 7); */
+    border-radius: 8px;
+    /* padding: 5px 30px; */
+}

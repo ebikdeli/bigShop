@@ -1,0 +1,58 @@
+#verified-order{
+    max-width: 100%;
+}
+
+#order--separator{
+    display: block;
+    width: 90%;
+    border-width: 1px 0 0 0;
+    border-color: rgb(55, 54, 54);
+    border-style: groove;
+}
+
+.order--product--list{
+    font-size: 20px;
+    font-weight: 600;
+}
+
+a{
+    text-decoration: none !important;
+}
+
+#back--index{
+    font-size: 20px !important;
+}
+
+#print--page{
+    font-size: 18px !important;
+}
+
+@media only screen and (min-width: 900px){
+    .desktop{
+        width: 15%;
+    }
+}
+
+/* @media only screen and (max-width: 900px) and (min-width: 500px){ */
+@media only screen and (500px <= width <= 900px){
+    .tablet{
+        width: 30%;
+    }
+}
+
+@media only screen and (max-width: 500px){
+    .mobile{
+        width: 50%;
+    }
+}
+
+/* * This is used when print the page */
+@media print{
+    .no-print{
+        display: none !important;
+    }
+    #verified-order{
+        width: 300px;
+        height: auto;
+    }
+}

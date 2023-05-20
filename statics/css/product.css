@@ -1,0 +1,113 @@
+/* **** NOTE: When using bootstrap, if we want to put row or more block in the row but being responsive, it is recommended to use 'row' class to send exessive content to the new line automatically */
+
+/* Following block makes the body responsive without using bootstrap */
+/* .product--body{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+} */
+
+
+/* * product detail section */
+
+.product--detail{
+    margin-left: 0px;
+}
+
+/* * product name and brand */
+
+.product--name > h2{
+    margin: 0;
+    font-size: 30px;
+    color: rgb(75, 75, 75);
+    font-weight: 600;
+}
+
+.product--brand > h3{
+    font-size: 26px;
+    font-weight: 700;
+    color: rgb(89, 88, 88);
+}
+
+/* * color */
+
+input[type='color']{
+    margin-left: 10px;
+}
+
+/* * price  */
+
+#plain-price{
+    color: gray;
+    font-size: 18px;
+    font-weight: 300;
+    text-decoration: line-through;
+}
+
+#discount--box{
+    background-color: rgb(21, 150, 167);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: aliceblue;
+}
+
+#discount--precent > span{
+    margin-left: 1px;
+    margin-right: 1px
+}
+
+#end-price{
+    font-weight: 600;
+    font-size: 26px;
+}
+
+#currency{
+    font-size: 26px;
+    font-family: 500;
+}
+
+/* * cart */
+
+#product--cart-input{
+    width: 40px;
+    text-align: center;
+    border-radius: 20%;
+}
+
+/* #number-up-div, #number-down-div{
+    position: relative;
+}
+
+#number-up-div #number-up-text{
+    display: none;
+    position: absolute;
+    top: 30px;
+    width: 70px;
+    padding:4px 6px;
+    background-color: black;
+    color: aliceblue;
+} */
+
+#number-up-div:hover #number-up-text{
+    display: block;
+}
+
+
+/* * image section */
+
+.main--img{
+    max-width: 90%;
+}
+
+#main--img{
+    max-width: 100%;
+    height: auto;
+    /* width: 450px;
+    height: 320px; */
+}
+
+#carouselExampleControls{
+    width: 200px;
+    height: 145px;
+}

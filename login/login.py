@@ -7,8 +7,6 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from .forms import validate_password
-
 
 def user_signup_login(request, user):
     """
@@ -34,27 +32,14 @@ def user_password_change(request, form):
         # First we must test user authentication with the password to know if there is a user with the entered password
         # in db. Note that we do this when currently user is authenticated!
         if authenticate(request, username=user.username, password=form.cleaned_data['password']):
-            if validate_password(request, form.cleaned_data['new_password']):
-                # If user authenticated with current password and new password validated in 'validate_password' implement
-                # the password change
-                user.set_password(form.cleaned_data['new_password'])
-                user.save()
-                # login user after changing the password
-                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-                messages.success(request, _('Your password changed successfully'))
-                # messages.success(request, _('رمز عبور شما با موفقیت تغییر کرد'))
-                return True
-            # If user authenticated with current password but 'validate_password' returns error to validate new password,
-            # it returns None
-            return None
-        # If user doen't authenticate with current password entered, returns None
-        else:
-            messages.error(request, _('Current password is wrong!'))
-            # messages.error(request, _('رمز عبور اشتباه است'))
-            return None
-    # If the whole form validation failed, returns None with following message
-    messages.error(request, _('Password change operation failed. Try again the process'))
-    # messages.error(request, _('عملیات تغییر رمز عبور مفقیت آمیز نبود. بار دیگر تلاش کنید'))
+            # If user authenticated with current password and new password validated in 'validate_password' implement
+            # the password change
+            user.set_password(form.cleaned_data['new_password'])
+            user.save()
+            # login user after changing the password
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            return True
+    # If the whole form validation failed, returns None
     return None
 
 

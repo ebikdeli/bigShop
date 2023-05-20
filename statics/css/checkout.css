@@ -1,0 +1,66 @@
+/* * NOTE: In css, 'postion: sticky' only works when we set 'top' attribute. Other attributes like 'bottom', 'lef' and 'right' do not work for this position */
+/* .order-payment-block{
+    position: sticky;
+    top: 5px;
+} */
+
+.order-body{
+    width: 100%;
+}
+
+.order-product-block{
+    overflow-x: auto;
+}
+
+#order-product-payment-separator{
+    border-top: 1px;
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
+    width: 100%;
+    border-color: rgb(26, 26, 107);
+    border-style: dotted;
+}
+
+/* * Order products section */
+.order--product--header{
+    color: rgb(3, 3, 175);
+    font-weight: 600;
+    font-size: 24px;
+}
+
+.order--product--row{
+    border-top: 1px;
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
+    border-color: rgb(180, 178, 178);
+    border-style: groove;
+}
+
+.order-product{
+    height: 250px;
+}
+
+
+/* * Order payment section */
+.order-payment{
+    /* position: absolute; */
+    right: 5px;
+    background-color: rgb(192, 194, 192);
+    color: rgb(74, 74, 74);
+    font-size: 18px;
+    border-radius: 5%;
+}
+
+
+#payment--button--separator{
+    padding-top: 13px;
+    border-width: 1px 0 0 0;
+    border-color: black;
+    border-style: solid;
+}
+
+#payment--button--separator > a{
+    text-decoration: none;
+}

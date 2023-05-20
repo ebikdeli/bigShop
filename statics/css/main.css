@@ -1,0 +1,332 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+body{
+    font-family: 'Lato', sans-serif !important;
+    font-weight: 900;
+}
+
+
+/* * Navbar section (START) */
+@media only screen and (width <= 991px){
+    #search-login{
+        margin-left: auto;
+        margin-right: auto;
+    }
+    #search-form-box{
+        margin-top: 10px;
+    }
+    #search-form-box > form > button{
+        margin-bottom: 10px;
+    }
+    #search-form-box > form > input{
+        margin-bottom: 10px;
+    }
+}
+
+/* * Navbar section (END) */
+
+#login-link{
+    text-decoration: none;
+    color: black;
+}
+
+#user-icon{
+    padding-right: 10px;
+}
+
+
+/* * Make cart sticky to the screen (START) */
+.login-cart-box{
+    position: sticky;
+    top: 5px;
+}
+
+.login-cart{
+    position: absolute;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(224, 221, 221);
+    border-radius: 8%;
+    padding: 5px 15px;
+    opacity: 80%;
+}
+
+.s-cart-link{
+    color: black;
+    text-decoration: none;
+    display: flex;
+}
+
+.s-cart-number{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%
+}
+
+@media only screen and (width <=750px){
+    .login-cart{
+        position: fixed;
+        left: 50%;
+        bottom: 20%;
+        width: min-content;
+        transform: translate(-50%, 0);
+        background-color: rgb(224, 221, 221);
+        border-radius: 8%;
+        padding: 5px 15px;
+        opacity: 80%;
+    }
+}
+/* * Make cart sticky to the screen (END) */
+
+
+/* Cover section */
+.background{
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg-text{
+    font-size: 48px !important;
+    font-weight: 900 !important;
+    color: red
+}
+
+.background1{
+    background-image: url('../images/iphone_11_PNG15.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    background-attachment: fixed;
+}
+
+.background2{
+    background-image: url('../images/laptop_PNG101812.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    background-attachment: fixed;
+}
+
+.background3{
+    background-image: url('../images/server_PNG35.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    background-attachment: fixed;
+}
+
+
+main{
+    width: 90%;
+}
+
+
+/* product-list section - THIS IS VERY NICE IF DON"T WANT TO USE BOOTSTRAP FLEX SYSTEM */
+/* .products-list{
+    display: flex;
+    flex-flow: row wrap;  This line is very important to let flex set the next item to the nex line after current line gets full
+    align-items: center;
+    justify-content: flex-start;
+} */
+
+#newest-products{
+    direction: rtl;
+    font-family: IRANYekan, sans-serif;
+    font-weight: 600;
+}
+
+.product{
+    direction: rtl;
+    text-align: center;
+    /* width: 450px; */
+    /* background-color: rgb(239, 241, 248); */
+    border-style: solid;
+    border-radius: 5%;
+    border-color: rgb(86, 90, 90);
+    border-width: 1px;
+}
+
+/* .product-image-block{
+    
+} */
+
+.product-name{
+    /* flex-wrap: row wrap; */
+    font-size: 20px !important;
+    font-weight: 500 !important;
+}
+
+.product-name > a{
+    /* font-weight: 600;
+    font-size: 24px; */
+    color: black;
+}
+
+.product-name > a:hover{
+    color: rgb(13,110,253);
+}
+
+.product-name > a > p{
+    direction: ltr;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* .product-image-block{
+    width: 70%;
+} */
+
+.product-image{
+    /* max-width: 100%;
+    height: auto; */
+    width: 150px;
+    height: 110px;
+}
+
+.product-price{
+    font-size: 20px;
+    /* font-size: 130%; */
+}
+
+.price-original{
+    font-family: IRANYekan, sans-serif;
+    color: black;
+}
+
+.discounted{
+    font-size: 16px;
+    color: red !important;
+    text-decoration: line-through;
+}
+
+.price-discounted{
+    font-family: IRANYekan, sans-serif;
+    font-weight: 700;
+    color: green;
+}
+
+/* .price-value{
+
+} */
+
+.price-currency{
+    text-decoration: none;
+}
+
+.price-discounted{
+    font-family: IRANYekan, sans-serif;
+}
+
+.add-to-cart{
+    font-family: IRANYekan, sans-serif;
+}
+
+.product-tags{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: row wrap;
+}
+
+.single-tag{
+    background-color: rgb(179, 178, 178);
+}
+
+.single-tag > a{
+    color: black;
+    text-decoration: none;
+}
+
+.single-tag > a > p{
+    padding: 3px 8px;
+    margin: 0;
+}
+
+
+#main-footer-separator{
+    width: 80%;
+    border-style: ridge;
+    border-color: rgb(205, 219, 245);
+    border-width: 2px;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+}
+
+
+/* ****** footer section ****** */
+/* footer{
+    border-style: ridge;
+    border-color: rgb(205, 219, 245);
+    border-width: 2px;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+} */
+
+/* * pr-box */
+#pr-box{
+    direction: rtl;
+    text-align: center;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: IRANYekan, sans-serif;
+    font-size: 28px;
+    font-weight: 550;
+}
+
+.pr-error > p{
+    color: red;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: IRANYekan, sans-serif;
+    margin: 0;
+    padding-top: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.pr-result{
+    font-size: 24px;
+    font-weight: 600;
+    font-family: IRANYekan, sans-serif;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#pr-success{
+    color: green;
+    margin: 0;
+}
+
+#pr-failed{
+    color: red;
+    margin: 0;
+}
+
+/* * footer body */
+#footer-content{
+    background-color: rgb(25, 75, 128);
+    color: whitesmoke;
+    font-family: IRANYekan, sans-serif;
+    text-align: center;
+    direction: rtl;
+}
+
+#footer-img{
+    height: auto;
+    width: 150px;
+}

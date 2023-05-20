@@ -1,0 +1,111 @@
+/*
+I wanted to go with a mobile first approach, but it actually lead to more verbose CSS in this case, so I've gone web first. Can't always force things...
+
+Side note: I know that this style of nesting in SASS doesn't result in the most performance efficient CSS code... but on the OCD/organizational side, I like it. So for CodePen purposes, CSS selector performance be damned.
+*/
+/* Global settings */
+/* Global "table" column settings */
+
+h1{
+  text-align: center;
+  padding-bottom: 50px;
+  font-family: IRANYekan, sans-serif;
+}
+
+
+/* * Cart product table section */
+table{
+  width: 100%;
+  text-align: center;
+}
+
+tr{
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-top: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 1px !important;
+  border-color: rgb(216, 220, 216) !important;
+  border-style: solid !important;
+}
+
+th{
+  height: 100px;
+  font-size: 24px;
+  font-weight: 600;
+  color: rgb(68, 69, 68);
+  
+}
+
+td{
+  color: rgb(105, 104, 104);
+  font-weight: 600;
+  height: 180px;
+}
+
+
+.cart--columns{
+  font-size: 26px;
+  font-weight: 600;
+  color: grey;
+}
+
+.cart--product--quantity{
+  width: 30px;
+  text-align: center;
+  border-radius: 10%;
+}
+
+.cart--image{
+  width: 160px;
+  height: 120px;
+}
+
+
+/* * Total Cart calc section */
+.totals{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(225, 227, 227);
+  opacity: 100%;
+  border-radius: 5%;
+}
+
+label{
+    color: rgb(76, 75, 75);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.totals-value{
+  font-size: 20px;
+  font-weight: 600;
+  color: rgb(84, 84, 84);
+}
+
+.totals--separator{
+  margin-top: 3px;
+  margin-bottom: 3px;
+  width: 60%;
+  border-bottom: 1px;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-color: rgb(86, 84, 84);
+  border-style: ridge;
+}
+
+#cart-checkout--box{
+  width: max-content;
+}
+
+#cart-checkout--box > a{
+  text-decoration: none;
+  color: black;
+}
+
+.checkout i, span{
+  font-size: 20px;
+}
