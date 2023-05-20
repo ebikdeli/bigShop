@@ -56,7 +56,8 @@ def signup(request):
             # the user to the main page
             return redirect('vitrin:index')
     # If any method used except for 'POST', redirect user to 'login_signup' view
-    return redirect('login:login_signup')
+    else:
+        return render(request, 'login/signup.html')
 
 
 @login_required

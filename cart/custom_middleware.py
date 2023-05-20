@@ -24,9 +24,9 @@ class InitialSessionMiddleware:
         """
         Called just before Django calls the view.
         """
-        # print("Cart middle ware first", request.session.items())
-        if not request.session.session_key:
-            request.session.save()
+        # ? If session_key has not been created already, create it
+        if not request.session.exists(request.session.session_key):
+            request.session.create()
         # If cart sessions are not created already, create them
         try:
             get_cart_session(request)

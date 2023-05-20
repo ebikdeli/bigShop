@@ -17,11 +17,11 @@ class UserLogin(forms.Form):
 class UserSignUpForm(forms.ModelForm):
     """ModelForm for ordinary users to signup from 'login' app."""
     password = forms.CharField(widget=forms.PasswordInput)
-    confirm_password = forms.CharField(widget=forms.PasswordInput)
+    password_confirm = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
-        model = settings.AUTH_USER_MODEL
-        fields = ['username', 'password', 'password-confirm']
+        model = get_user_model()
+        fields = ['username', 'password', 'password_confirm']
 
 
 class UserAccountChangeForm(forms.Form):

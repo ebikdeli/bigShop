@@ -1,112 +1,25 @@
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
+{% extends 'templates/base.html' %}
+{% load static %}
 
 
-
-  <!-- **** 'base_head' block in 'base.html' **** -->
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="shortcut icon" href="./images/logo.ico" type="image/x-icon">
-  <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet'>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-
-  <!-- **** 'base_head' block in 'base.html' -->
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+{% endblock head %}
 
 
-
-  <!-- ***** 'head' block in 'base.html' -->
-  <link rel="stylesheet" href="./css/main.css">
-  <!-- ***** 'head' block in 'base.html' -->
-
+{% block title %}
+  Eazy shop in BigShop
+{% endblock title %}
 
 
-  <!-- ** 'title' block in 'base.html' ** -->
-  <title>Eazy shop in BigShop</title>
-  <!-- ** 'title' block in 'base.html' ** -->
-
-
-
-</head>
-
-<body>
-
-
-
-  <!-- **** 'header' block in 'base.html/include header.html' **** -->
-  <nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: grey;">
-    <div class="container-fluid mx-auto px-5 justify-content-between align-items-center flex-wrap">
-      <!-- navbar links section -->
-      <div class="col-xl-4 col-lg-5 col-md-5 col-sm-6 col-6" id="navbar-links">
-        <div class="collapse navbar-collapse" id="navbarScroll">
-          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
-            <li class="nav-item px-2">
-              <a class="navbar-brand" href="#"><img src="./images/logo.jpg" alt="BigShop" class="img-thumbnail"></a>
-            </li>
-            <li class="nav-item px-2">
-              <a class="nav-link active" aria-current="page" href="#">About Us</a>
-            </li>
-            <li class="nav-item px-2">
-              <a class="nav-link" href="#">Latest Products</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                Category
-              </a>
-              <!-- This is where all Categories placed -->
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- navbar logo section and dropdown button -->
-      <div class="col-lg-1 col-md-10 col-sm-10 col-12 text-center mx-auto justify-content-around align-items-center" id='navbar-logo'>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
-          aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-      </div>
-      <!-- Search/login section -->
-      <div class="px-2 col-xl-4 col-lg-5 col-md-8 col-sm-12 col-12 d-flex justify-content-end align-items-center" id="search-login">
-        <div class="w-100" id="search-form-box">
-          <!-- Search Form -->
-          <form class="d-flex justify-content-end align-items-center flex-md-row flex-sm-column flex-column" role="button">
-            <input id="search-input" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-          </form>
-        </div>
-        <!-- login/signup (In navbar for future use) -->
-
-      </div>
-
-    </div>
-  </nav>
-  <!-- **** 'header' block in 'base.html/include header.html' **** -->
-
-
-
-  <!-- ******* 'content' block in 'base.html' ******* -->
+  {% block content %}
   <main class="m-auto py-5">
     <!-- Make cart sticky to the screen -->
     <div class="login-cart-box">
       <div class="login-cart d-flex justify-content-center align-items-center flex-column">
         <!-- login/signup -->
         <div class="login py-1">
-          <a id="login-link" href="./signup.html">
+          <a id="login-link" href="{% url 'login:signup' %}">
             <div class="d-flex align-items-center justify-content-between">
               <!-- if user login: green user icon, If user is not login or not registered: red icon -->
               <i id="user-icon" class='fas fa-user-alt' style='font-size:30px;color:green'></i>
@@ -409,79 +322,12 @@
       <!-- <div class="col-md-4 col-sm-12 col-12 mx-2 product">Asshole</div> -->
     </div>
   </main>
-  <!-- ******* 'content' block in 'base.html' ******* -->
-
+  {% endblock content %}
+  
 
   <div id="main-footer-separator" class="my-3 mx-auto"></div>
 
 
-  <!-- *** 'footer' block in 'base.html/include footer.html' *** -->
-  <footer class="mx-auto mt-3 pt-3">
-    <div id="pr-box">
-      <p style="direction: rtl;">لطفا انتقادات و پیشنهادات خود را با ما به اشتراک بگذارید:</p>
-      <div id="pr-form">
-        <form name="pr-form" action="#" class="mb-4">
-          <div id="form-email-section" class="mb-3 mx-auto col-lg-5 col-md-8 col-sm-10" style="direction: ltr;">
-            <!-- Error messasges will be shown here (When use the short way to show the errors)-->
-            <div class="pr-error">
-              <p></p>
-            </div>
-            <!-- <label for="exampleFormControlInput1" class="form-label">Email address</label> -->
-            <input name="email" type="text" class="form-control" id="email-input" placeholder="name@example.com">
-          </div>
-          <div id="form-content-section" class="mb-3 mt-3 mx-auto col-lg-5 col-md-8 col-sm-10">
-            <!-- Error messasges will be shown here (When use the short way to show the errors)-->
-            <div class="pr-error">
-              <p></p>
-            </div>
-            <!-- <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label> -->
-            <textarea name="content" class="form-control" id="content-input" rows="5"
-              placeholder="انتقادات و پیشنهادات"></textarea>
-          </div>
-          <button id="send-button" class="btn btn-primary">ارسال</button>
-          <div class="pr-result">
-            <!-- If data sent to server successully, execute 'pr-success', otherwise execute 'pr-failed' -->
-            <p id="pr-success"></p>
-            <p id="pr-failed"></p>
-          </div>
-        </form>
-
-      </div>
-    </div>
-    <div id="footer-content" class="pt-3">
-      <h5>تمامی حقوق وبسایت بیگ شاپ متعلق به شرکت رایانه پندار آپادانا می باشد</h5>
-      <div class="py-4">
-        <a href="">
-          <img src="./images/logo_bigger_original.jpg" id="footer-img" alt="bigshop logo footer">
-        </a>
-      </div>
-
-    </div>
-  </footer>
-  <!-- *** 'footer' block in 'base.html/include footer.html' -->
-
-
-
-</body>
-
-
-
-<!-- **** 'base_scripts' block in 'base.html' -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<!-- **** 'base_scripts' block in 'base.html' -->
-
-
-
-<!-- ** 'scripts' block in 'base.html' -->
-<!-- To use a module in parent script, we should set 'type="module"' for the parent script! -->
-<script src="./js/main.js" type="module"></script>
-<!-- ** 'scripts' block in 'base.html' -->
-
-
-
-</html>
+{% block scripts %}
+  <script src="{% static 'statics/js/main.js' %}" type="module"></script>
+{% endblock scripts %}

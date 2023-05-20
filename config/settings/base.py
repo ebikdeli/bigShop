@@ -70,7 +70,8 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR,  os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [BASE_DIR, 
+                os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -161,7 +162,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 # STATIC_ROOT = '/home/<serivce_name>/public_html/static'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR),
+    BASE_DIR,
+    os.path.join(BASE_DIR, 'statics')
 ]
 
 MEDIA_URL = '/media/'
@@ -174,9 +176,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # LOGIN_REDIRECT_URL = '/'
-LOGIN_REDIRECT_URL = reverse_lazy('login:login_signup')
-
-LOGIN_URL = 'login:login_signup'
+# LOGIN_URL = 'login:login_signup'
 
 LOGOUT_REDIRECT_URL = 'vitrin:index'
 
