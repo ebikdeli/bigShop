@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django_countries.fields import Country
 
-from shop.models import Category, Brand, Device,\
+from product.models import Category, Brand, Device,\
                         Product, Color, ColorPrice
 
 

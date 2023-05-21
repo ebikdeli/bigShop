@@ -17,8 +17,9 @@ urlpatterns = [
     
     # path('accounts/', include('accounts.urls')),
     path('login/', include('login.urls')),
+    path('dashboard/', include('dashboard.urls')),
     path('support/', include('support.urls')),
-    path('shop/', include('shop.urls')),
+    path('product/', include('product.urls')),
     # path('accounts_device/', include('accounts_device.urls')),
     path('cart/', include('cart.urls')),
     path('api-auth/', include('rest_framework.urls')),    # ...defined as 'accounts' subdirectory in 'hosts.py' module

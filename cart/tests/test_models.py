@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from ..models import Cart, CartItem
-from shop.models import Product
+from product.models import Product
 
 
 class TestCart(TestCase):

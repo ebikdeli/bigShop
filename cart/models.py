@@ -4,7 +4,7 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 
-from shop.models import Product
+from product.models import Product
 from .cart_functions import reset_session, set_session_cart, get_cart_with_id,\
                             get_cart_and_cart_item_id
 
@@ -187,7 +187,7 @@ class CartItem(models.Model):
                              verbose_name=_('cart'),
                              on_delete=models.CASCADE,
                              related_name='cartitem_cart')
-    product = models.ForeignKey('shop.Product',
+    product = models.ForeignKey('product.Product',
                                 verbose_name=_('product'),
                                 on_delete=models.CASCADE,
                                 related_name='cartitem_product')

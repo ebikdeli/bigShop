@@ -1,5 +1,3 @@
-from django.urls import reverse_lazy
-
 import os
 from collections import OrderedDict
 
@@ -33,12 +31,12 @@ INSTALLED_APPS = [
     'constance.backends.database',
     'watchman',
 
-    # Bussiness Login apps
     'accounts',
     'login',
     'support',
-    'shop',
+    'product',
     'cart',
+    'dashboard',
 ]
 
 
@@ -175,8 +173,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# LOGIN_REDIRECT_URL = '/'
-# LOGIN_URL = 'login:login_signup'
+LOGIN_REDIRECT_URL = 'virtin:index'
+LOGIN_URL = 'login:signup'
 
 LOGOUT_REDIRECT_URL = 'vitrin:index'
 
@@ -247,7 +245,7 @@ CKEDITOR_UPLOAD_PATH = "uploads/"
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 
 CONSTANCE_CONFIG = OrderedDict([
-    ('email', ('green_apple@gmail.com', 'Main email of the server')),
+    ('email', ('bigshop@gmail.com', 'Main email of the server')),
     # About us field
     ('about_us', ('', 'About Us field shown to users in "about us page"')),
     # Address of the links used in website
