@@ -1,34 +1,39 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import gettext_lazy as _
 # from django.views.decorators.cache import cache_page, never_cache
 from cart.models import Cart
-from .forms import UserLogin, UserSignUpForm, UserPasswordChangeForm
+from .forms import UserPasswordChangeForm
 from .login import user_signup_login, user_password_change
 from cart.cart_functions import synch_cart_session_cart_after_authentication
+
+import json
 
 
 # @cache_page(60 * 15)
 def classic_login(request):
     """Handles the classic or ordinary user login procedure"""
     if request.method == 'POST':
-        login_form = UserLogin(data=request.POST)
-        if login_form.is_valid():
-            user = authenticate(request,
-                                username=request.POST['username_login'],
-                                password=login_form.cleaned_data['password_login'])
-            if user:
-                login(request, user)
-                # Synchronize Cart data with cart session data after login
-                synch_cart_session_cart_after_authentication(Cart, request)
-                return redirect(reverse('vitrin:index'))
-            else:
-                return redirect('login:login_signup')
+        pass
+        # login_form = UserLogin(data=request.POST)
+        # if login_form.is_valid():
+        #     user = authenticate(request,
+        #                         username=request.POST['username_login'],
+        #                         password=login_form.cleaned_data['password_login'])
+        #     if user:
+        #         login(request, user)
+        #         # Synchronize Cart data with cart session data after login
+        #         synch_cart_session_cart_after_authentication(Cart, request)
+        #         return redirect(reverse('vitrin:index'))
+        #     else:
+        #         return redirect('login:login_signup')
     else:
-        return redirect('login:login_signup')
+        return render(request, 'login/signin.html')
 
 
 @login_required
@@ -43,18 +48,25 @@ def logout_view(request):
 def signup(request):
     """SignUp user after user proceeds with signup form in 'user_signup_view"""
     if request.method == 'POST':
-        signup_form = UserSignUpForm(data=request.POST, files=request.FILES)
-        if signup_form.is_valid():
-            new_user = signup_form.save(commit=False)
-            # Validate password manually (Django has odd behaviors to validate passwords) 
-            if user_signup_login(request, new_user):
-                # Synchronize Cart data with cart session data after login
-                synch_cart_session_cart_after_authentication(Cart, request)
-                # If user created successfully, direct him/her to his/her newly created profile
-                return redirect('login:profile')
-            # If there is a problem in 'user_signup_login' (eg: user could not login the website) redirect
-            # the user to the main page
-            return redirect('vitrin:index')
+        json_data = request.POST.get('data', None)
+        if not json_data:
+            return JsonResponse(data={'msg': 'no data received'})
+        data = json.loads(json_data)
+        new_user = get_user_model().objects.filter(username=data['username'])
+        if new_user.exists():
+            return JsonResponse(data={'msg': f'{data["username"]} already exists', 'status': 300})
+        new_user = get_user_model()(username=data['username'], password=data['password'])
+        # Validate password manually (Django has odd behaviors to validate passwords) 
+        if user_signup_login(request, new_user):
+            # Synchronize Cart data with cart session data after login
+            synch_cart_session_cart_after_authentication(Cart, request)
+            # If user created successfully, direct him/her to his/her newly created profile
+            # return redirect('vitrin:index')
+            return JsonResponse(data={'msg': f"{data['username']} created successfully", 'status': 201})
+        # If there is a problem in 'user_signup_login' (eg: user could not login the website) redirect
+        # the user to the main page
+        # return redirect('vitrin:index')
+        return JsonResponse(data={'msg': 'user created but could no login', 'status': 301})
     # If any method used except for 'POST', redirect user to 'login_signup' view
     else:
         return render(request, 'login/signup.html')

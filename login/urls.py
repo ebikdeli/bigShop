@@ -7,7 +7,7 @@ from . import forms_forget_passwords
 app_name = 'login'
 
 urlpatterns = [
-    path('login/', views.classic_login, name='classic_login'),
+    path('login/', views.classic_login, name='classic-login'),
     path('logout/', views.logout_view, name='logout'),
     path('signup/', views.signup, name='signup'),
 ]

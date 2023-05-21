@@ -321,12 +321,44 @@
       </div>
       <!-- <div class="col-md-4 col-sm-12 col-12 mx-2 product">Asshole</div> -->
     </div>
+
+    {% comment %} After product {% endcomment %}
+    <div id="main-footer-separator" class="my-3 mx-auto"></div>
+    <div id="pr-box">
+      <p style="direction: rtl;">لطفا انتقادات و پیشنهادات خود را با ما به اشتراک بگذارید:</p>
+      <div id="pr-form">
+        <form name="pr-form" action="#" class="mb-4">
+          <div id="form-email-section" class="mb-3 mx-auto col-lg-5 col-md-8 col-sm-10" style="direction: ltr;">
+            <!-- Error messasges will be shown here (When use the short way to show the errors)-->
+            <div class="pr-error">
+              <p></p>
+            </div>
+            <!-- <label for="exampleFormControlInput1" class="form-label">Email address</label> -->
+            <input name="email" type="text" class="form-control" id="email-input" placeholder="name@example.com">
+          </div>
+          <div id="form-content-section" class="mb-3 mt-3 mx-auto col-lg-5 col-md-8 col-sm-10">
+            <!-- Error messasges will be shown here (When use the short way to show the errors)-->
+            <div class="pr-error">
+              <p></p>
+            </div>
+            <!-- <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label> -->
+            <textarea name="content" class="form-control" id="content-input" rows="5"
+              placeholder="انتقادات و پیشنهادات"></textarea>
+          </div>
+          <button id="send-button" class="btn btn-primary">ارسال</button>
+          <div class="pr-result">
+            <!-- If data sent to server successully, execute 'pr-success', otherwise execute 'pr-failed' -->
+            <p id="pr-success"></p>
+            <p id="pr-failed"></p>
+          </div>
+        </form>
+  
+      </div>
+    </div>
+
   </main>
   {% endblock content %}
   
-
-  <div id="main-footer-separator" class="my-3 mx-auto"></div>
-
 
 {% block scripts %}
   <script src="{% static 'statics/js/main.js' %}" type="module"></script>

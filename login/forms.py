@@ -1,27 +1,7 @@
 from django import forms
-from django.conf import settings
-from django.core.validators import MaxLengthValidator, MinLengthValidator
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-
-import re
-
-
-class UserLogin(forms.Form):
-    """Simple form for ordinary users to login from 'login' app."""
-    username_login = forms.CharField()
-    password_login = forms.CharField(widget=forms.PasswordInput)
-
-
-class UserSignUpForm(forms.ModelForm):
-    """ModelForm for ordinary users to signup from 'login' app."""
-    password = forms.CharField(widget=forms.PasswordInput)
-    password_confirm = forms.CharField(widget=forms.PasswordInput)
-
-    class Meta:
-        model = get_user_model()
-        fields = ['username', 'password', 'password_confirm']
 
 
 class UserAccountChangeForm(forms.Form):

@@ -64,8 +64,15 @@ def get_or_create_cart_auth_session_key(_model: object, request: HttpRequest) ->
         # cart_session = Cart.objects.filter(session_key=request.session.session_key)
         # If there is no Cart with current session_key either, create a new Cart with current user and current session_key
         if not cart_session.exists():
+            # ? If session_key has not been created already, create it
+            print('SESSION_KEY: ', request.session.session_key)
+            if not request.session.exists(request.session.session_key):
+                session_key = request.session.create()
             cart = _model.objects.create(user=request.user, session_key=request.session.session_key)
             print('cart created for the user')
+            # !Changed after using ajax
+            reset_session(request)
+            
             # Cart.objects.create(user=request.user, session_key=request.session.session_key)
         else:
             print('cart found for the session but without user')

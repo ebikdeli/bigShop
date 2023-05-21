@@ -8,6 +8,14 @@ const validateEmail = (email) => {
   };
 
 
+// * Validate mobile phone
+const check_phone = (number) => {
+    var regex = new RegExp("^(\\+98|0)?9\\d{9}$");
+    var result = regex.test(number);
+    return result;
+};
+
+
 // Helper to add 1 to the product--cart input number
 let addOne = (inputNode, max=5) => {
     if(Number(inputNode.value < max)){
@@ -60,24 +68,22 @@ const disabledSubmitRule = (buttonElem, e) => {
 
 
 // Validate user sing up data
-const signUpDataValidation = (email=new String, password=new String, confrimPassword=new String) => {
-    const emailError = document.querySelector('.signup-email-error');
+const signUpDataValidation = (username=new String, password=new String, confrimPassword=new String) => {
+    const usernameError = document.querySelector('.signup-username-error');
     const passwordError = document.querySelector('.signup-password-error');
     const confirmPasswordError = document.querySelector('.signup-password-cofirm-error');
-    emailError.innerText = '';
+    usernameError.innerText = '';
     passwordError.innerText = '';
     confirmPasswordError.innerText = '';
     let errors = 0;
-    // Email validation
-    if(email.length < 1 || !validateEmail(email)){
-        if(email.length < 1){
-            emailError.innerText = 'ایمیل خود را وارد کنید';
-            errors += 1;
-        }
-        else if(!validateEmail(email)){
-            emailError.innerText = 'ایمیل خود را به درستی وارد کنید';
-            errors += 1;
-        }
+    // Username validation
+    if(username.length < 1){
+        usernameError.innerText = 'ایمیل یا شماره تماس  خود را وارد کنید';
+        errors += 1;
+    }
+    if(!(validateEmail(username) || check_phone(username))){
+        usernameError.innerText = 'ایمیل یا شماره تماس خود را به درستی وارد کنید';
+        errors += 1;
     }
     // Password validation
     if(password.length == 0){
@@ -102,7 +108,7 @@ const signUpDataValidation = (email=new String, password=new String, confrimPass
         errors += 1;
     }
     if(errors == 0){
-        emailError.innerText = '';
+        usernameError.innerText = '';
         passwordError.innerText = '';
         confirmPasswordError.innerText = '';
         return true;
@@ -112,20 +118,20 @@ const signUpDataValidation = (email=new String, password=new String, confrimPass
 
 
 // Sign in data validation
-const signInDataValidation = (email, password) => {
-    const emailError = document.querySelector('.signin-email-error');
+const signInDataValidation = (username, password) => {
+    const usernameError = document.querySelector('.signin-email-error');
     const passwordError = document.querySelector('.signin-password-error');
-    emailError.innerText = '';
+    usernameError.innerText = '';
     passwordError.innerText = '';
     let errors = 0;
-    // Email validation
-    if(email.length < 1 || !validateEmail(email)){
-        if(email.length < 1){
-            emailError.innerText = 'ایمیل خود را وارد کنید';
+    // Username validation
+    if(username.length < 1 || !validateEmail(username)){
+        if(username.length < 1){
+            usernameError.innerText = 'ایمیل خود را وارد کنید';
             errors += 1;
         }
         else if(!validateEmail(email)){
-            emailError.innerText = 'ایمیل خود را به درستی وارد کنید';
+            usernameError.innerText = 'ایمیل خود را به درستی وارد کنید';
             errors += 1;
         }
     }
@@ -135,7 +141,7 @@ const signInDataValidation = (email, password) => {
         errors += 1;
     }
     if(errors == 0){
-        emailError.innerText = '';
+        usernameError.innerText = '';
         passwordError.innerText = '';
         return true;
     }
@@ -143,6 +149,6 @@ const signInDataValidation = (email, password) => {
 }
 
 
-export {validateEmail, addOne, minuseOne, 
+export {validateEmail, check_phone, addOne, minuseOne, 
     checkCartQuantity, checkRulesBorder, disabledSubmitRule,
     signUpDataValidation, signInDataValidation};

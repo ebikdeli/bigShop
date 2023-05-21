@@ -1,5 +1,5 @@
-import {checkRulesBorder, disabledSubmitRule, signUpDataValidation} from './functions.js';
-import { sendPostData } from './ajax.js';
+import {checkRulesBorder, disabledSubmitRule, signUpDataValidation} from '../functions.js';
+import { sendPostData } from '../ajax.js';
 
 
 let acceptButton = document.querySelector('input[type="checkbox"]');
@@ -12,17 +12,25 @@ submitButton.parentElement.addEventListener('click', e => {
     const ruleChecked = checkRulesBorder(acceptButton, submitButton);
     // * If rule checkbox is checked, validate form data
     if(ruleChecked){
-        const email = document.querySelector('[name="email"]').value;
+        const username = document.querySelector('[name="username"]').value;
         const password = document.querySelector('[name="password"]').value;
-        const passwordConfirm = document.querySelector('[name="password-confirm"]').value;
+        const passwordConfirm = document.querySelector('[name="password_confirm"]').value;
         // If data validation was successful, send data to server
-        if(signUpDataValidation(email, password, passwordConfirm)){
-            const url = 'http://127.0.0.1:8000/signup';
-            const data = {email: email, password: password};
+        if(signUpDataValidation(username, password, passwordConfirm)){
+            const url = 'http://127.0.0.1:8000/login/signup/';
+            const data = {username: username, password: password};
             const err = 'مشکلی در اتصال پیش آمده';
             sendPostData(url, data, err)
             .then(data => {
                 console.log(data);
+                console.log(data.status);
+                if(data.status === 300){
+                    alert('This user already exists')
+                }
+                if(data.status === 201){
+                    console.log(data.msg);
+                    window.location.replace('http://127.0.0.1:8000/')
+                }
             })
             .catch(err => {
                 console.log(err);
