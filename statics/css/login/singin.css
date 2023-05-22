@@ -2,7 +2,7 @@ main{
 
     height: 100vh;
     width: auto;
-    background-image: url('../images/login-background.jpg');
+    background-image: url('../../images/login-background.jpg');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -15,7 +15,7 @@ main{
     font-weight: 500;
 }
 
-input[name='email'], input[name='password']{
+input[name='username'], input[name='password']{
     direction: ltr;
     text-align: center;
     width: 100%;

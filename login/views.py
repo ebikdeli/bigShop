@@ -19,19 +19,20 @@ import json
 def classic_login(request):
     """Handles the classic or ordinary user login procedure"""
     if request.method == 'POST':
-        pass
-        # login_form = UserLogin(data=request.POST)
-        # if login_form.is_valid():
-        #     user = authenticate(request,
-        #                         username=request.POST['username_login'],
-        #                         password=login_form.cleaned_data['password_login'])
-        #     if user:
-        #         login(request, user)
-        #         # Synchronize Cart data with cart session data after login
-        #         synch_cart_session_cart_after_authentication(Cart, request)
-        #         return redirect(reverse('vitrin:index'))
-        #     else:
-        #         return redirect('login:login_signup')
+        data_json = request.POST['data']
+        if not data_json:
+            return JsonResponse(data={'msg': 'اطلاعاتی دریافت نشد', 'status': 400})
+        data = json.loads(data_json)
+        user = authenticate(request,
+                            username=data['username'],
+                            password=data['password'])
+        if user:
+            login(request, user)
+            # Synchronize Cart data with cart session data after login
+            synch_cart_session_cart_after_authentication(Cart, request)
+            return JsonResponse(data={'msg': 'ورود با موفقیت انجام گرفت', 'status': 200})
+        else:
+            return JsonResponse(data={'msg': 'کاربر در حال حاضر حاضر وجود دارد', 'status': 401})
     else:
         return render(request, 'login/signin.html')
 

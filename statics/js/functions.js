@@ -119,19 +119,19 @@ const signUpDataValidation = (username=new String, password=new String, confrimP
 
 // Sign in data validation
 const signInDataValidation = (username, password) => {
-    const usernameError = document.querySelector('.signin-email-error');
+    const usernameError = document.querySelector('.signin-username-error');
     const passwordError = document.querySelector('.signin-password-error');
     usernameError.innerText = '';
     passwordError.innerText = '';
     let errors = 0;
     // Username validation
-    if(username.length < 1 || !validateEmail(username)){
+    if(username.length < 1 || !validateEmail(username) || check_phone(username)){
         if(username.length < 1){
-            usernameError.innerText = 'ایمیل خود را وارد کنید';
+            usernameError.innerText = 'ایمیل یا شماره همراه خود را وارد کنید';
             errors += 1;
         }
-        else if(!validateEmail(email)){
-            usernameError.innerText = 'ایمیل خود را به درستی وارد کنید';
+        else if(!(validateEmail(username) || check_phone(username))){
+            usernameError.innerText = 'ایمیل یا شماره همراه خود را به درستی وارد کنید';
             errors += 1;
         }
     }
