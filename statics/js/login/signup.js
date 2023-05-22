@@ -22,14 +22,31 @@ submitButton.parentElement.addEventListener('click', e => {
             const err = 'مشکلی در اتصال پیش آمده';
             sendPostData(url, data, err)
             .then(data => {
-                console.log(data);
-                console.log(data.status);
+                // console.log(data);
                 if(data.status === 300){
-                    alert('This user already exists')
+                    Swal.fire(
+                        'کاربر جدید ایجاد نشد',
+                        data.msg,
+                        'error'
+                      )
+                }
+                if(data.status === 301){
+                    Swal.fire(
+                        'کاربر جدید ایجاد شد',
+                        'کاربر جدید ایجاد شد امل ورود انجام نگرفت',
+                        'alert'
+                      )
                 }
                 if(data.status === 201){
-                    console.log(data.msg);
-                    window.location.replace('http://127.0.0.1:8000/')
+                    Swal.fire({
+                        title: 'به فروشگاه بیگشاپ خوش آمدید',
+                        confirmButtonText: 'بازشگت به صفحه اصلی',
+                      }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+                            window.location.replace('http://127.0.0.1:8000/')
+                        }
+                      })
                 }
             })
             .catch(err => {

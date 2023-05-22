@@ -54,19 +54,16 @@ def signup(request):
         data = json.loads(json_data)
         new_user = get_user_model().objects.filter(username=data['username'])
         if new_user.exists():
-            return JsonResponse(data={'msg': f'{data["username"]} already exists', 'status': 300})
+            return JsonResponse(data={'msg': f'کاربر {data["username"]} در حال حاضر وجود دارد', 'status': 300})
         new_user = get_user_model()(username=data['username'], password=data['password'])
-        # Validate password manually (Django has odd behaviors to validate passwords) 
         if user_signup_login(request, new_user):
             # Synchronize Cart data with cart session data after login
             synch_cart_session_cart_after_authentication(Cart, request)
             # If user created successfully, direct him/her to his/her newly created profile
-            # return redirect('vitrin:index')
-            return JsonResponse(data={'msg': f"{data['username']} created successfully", 'status': 201})
+            return JsonResponse(data={'msg': f"کاربر جدید ساخته شد", 'status': 201})
         # If there is a problem in 'user_signup_login' (eg: user could not login the website) redirect
         # the user to the main page
-        # return redirect('vitrin:index')
-        return JsonResponse(data={'msg': 'user created but could no login', 'status': 301})
+        return JsonResponse(data={'msg': 'کاربر جدید ایجاد شد اما لاگین انجام نشد', 'status': 301})
     # If any method used except for 'POST', redirect user to 'login_signup' view
     else:
         return render(request, 'login/signup.html')
