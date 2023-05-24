@@ -28,6 +28,9 @@ class Order(models.Model):
         verbose_name_plural = 'Orders'
         ordering = ['-updated']
     
+    def __str__(self):
+        return f'{self.order_id}'
+    
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         # Create order_id field
@@ -92,6 +95,9 @@ class OrderItem(models.Model):
         verbose_name = 'OrderItem'
         verbose_name_plural = 'OrderItems'
         ordering = ['-updated']
+    
+    def __str__(self) -> str:
+        return f'{self.order.order_id}: {self.product.name}'
         
     def user(self):
         """Get OrderItem user"""
