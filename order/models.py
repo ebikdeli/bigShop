@@ -40,10 +40,12 @@ class Order(models.Model):
         if not self.slug:
             self.slug = slugify(self.order_id)
     
+    @property
     def user(self):
         """Get order user"""
         return self.cart.user
     
+    @property
     def price(self):
         """Get order price from order_items of current order"""
         price = 0
@@ -52,6 +54,7 @@ class Order(models.Model):
                 price += int(order_item.price * order_item.quantity)
         return price
     
+    @property
     def price_pay(self):
         """Get order price_pay from order_items of current order"""
         price_pay = 0
@@ -61,6 +64,7 @@ class Order(models.Model):
         price_pay -= self.discounts
         return price_pay if price_pay > 0 else 0
     
+    @property
     def quantity_total(self):
         """Get quantity of the items of current order"""
         quantity_total = 0
@@ -98,11 +102,13 @@ class OrderItem(models.Model):
     
     def __str__(self) -> str:
         return f'{self.order.order_id}: {self.product.name}'
-        
+    
+    @property    
     def user(self):
         """Get OrderItem user"""
         self.order.cart.user
     
+    @property
     def price(self):
         """Get price of the orderitem"""
         price = self.quantity * self.product.price
@@ -111,6 +117,7 @@ class OrderItem(models.Model):
             price += (cp.get().extra_price * self.quantity)
         return price
     
+    @property
     def price_pay(self):
         """Get price_pay of the orderitem by effecting the product discount and posible color price gap"""
         # price_pay = self.quantity * (self.product.price - self.product.discount)

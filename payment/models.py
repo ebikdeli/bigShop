@@ -27,7 +27,7 @@ class Payment(models.Model):
                             null=True)
     price = models.DecimalField(verbose_name=_('price'), max_digits=10, decimal_places=0)
     describtion = models.TextField(verbose_name=_('describtion'), blank=True)
-    pgi = models.CharField(verbose_name=_('gateway interface (pgi)'), choices=PGI_CHOICES)
+    pgi = models.CharField(verbose_name=_('gateway interface (pgi)'), choices=PGI_CHOICES, max_length=20)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     
@@ -38,18 +38,21 @@ class Payment(models.Model):
     def __str__(self) -> str:
         return f'{self.payment_id}'
     
+    @property
     def cart(self) -> object|None:
         """Get the cart for this payment"""
         if self.order:
             return self.order.cart
         return None
 
+    @property
     def order_items(self) -> object|None:
         """Get order items of the payment"""
         if self.order:
             return self.order.order_item_order.all()
         return None
     
+    @property
     def products(self) -> list:
         """Get products of the payment order"""
         products = list()

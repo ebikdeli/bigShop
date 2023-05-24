@@ -19,7 +19,7 @@ class OrderTest(TestCase):
     
     def test_order_price_(self):
         """Test if order price is zero"""
-        self.assertEqual(self.order.price(), 0)
+        self.assertEqual(self.order.price, 0)
     
 
 class OrderItemTest(TestCase):
@@ -39,13 +39,13 @@ class OrderItemTest(TestCase):
     
     def test_order_item_price(self):
         """Test if OrderItem price() works"""
-        self.assertEqual(int(self.product.price * 3), self.order_item.price())
+        self.assertEqual(int(self.product.price * 3), self.order_item.price)
     
     def test_order_items_price_paid(self):
         """Test if OrderItem price_pay() works"""
         self.product.discount = 500
         self.product.save()
-        self.assertEqual(int((self.product.price - self.product.discount) * 3), self.order_item.price_pay())
+        self.assertEqual(int((self.product.price - self.product.discount) * 3), self.order_item.price_pay)
     
     def test_order_items_price_paid(self):
         """Test ColorPrice price gap"""
@@ -54,6 +54,6 @@ class OrderItemTest(TestCase):
         oi_blue = OrderItem.objects.create(order=self.order, product=self.product, color=self.color_blue, quantity=3)
         oi_red = OrderItem.objects.create(order=self.order, product=self.product, color=self.color_red, quantity=3)
 
-        self.assertEqual(oi_red.price(), self.order_item.price())
-        self.assertNotEqual(oi_blue.price(), self.order_item.price())
-        self.assertEqual(oi_blue.price(), oi_red.price() + 800 * 3)
+        self.assertEqual(oi_red.price, self.order_item.price)
+        self.assertNotEqual(oi_blue.price, self.order_item.price)
+        self.assertEqual(oi_blue.price, oi_red.price + 800 * 3)

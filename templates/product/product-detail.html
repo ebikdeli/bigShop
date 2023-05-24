@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+  {% static 'css/main.css' %}
+  {% static 'css/product/product.css' %}
+{% endblock head %}
+
+
+
+
+
+{% block title %}
+  {{ product.name }}
+{% endblock title %}
+
+
+
+{% block content %}
+<main class="mx-auto my-5" style="direction: rtl;">
+  <div class="product--body row justify-content-center">
+    <!-- * product detail part -->
+    <div class="product--detail col-lg-4 col-md-6 col-sm-12 col-12">
+      <!-- product name -->
+      <div class="product--name pt-1 pb-md-4 pb-sm-4 pb-3">
+        <h2>Laptop HP db1100-ny</h2>
+      </div>
+      <!-- product brand -->
+      <div class="product--brand pt-1 pb-3">
+        <h3>Hewlett Packard (HP)</h3>
+      </div>
+      <!--  If there are diffrent colors for the product -->
+      <div class="product--colors--box pt-2 pb-3">
+        <div>
+          <p id="color--text" class="h3" style="font-family:IRANYekan, sans-serif; font-weight:600; color:rgb(84, 82, 82);">
+            رنگ های موجود
+          </p>
+        </div>
+        <div class="d-flex justify-content-start">
+          <input type="color" id="favcolor" name="favcolor" value="#ff0000">
+          <input type="color" id="favcolor" name="favcolor">
+          <input type="color" id="favcolor" name="favcolor" value="#99ff33">
+        </div>
+      </div>
+      <!-- product price -->
+      <div class="product--price--box pt-4">
+        <p class="h3" style="font-family:IRANYekan, sans-serif; font-weight:600; color:rgb(84, 82, 82);">
+          قیمت:
+        </p>
+        <!-- plain product price -->
+        <!-- * If There is no discount for the product, 'plain-price--block' must be ignored -->
+        <div class="plain--price--block d-flex align-items-center pb-2">
+          <p id="plain-price" class="m-0 px-2 h2">300000</p>
+          <div id="discount--box" class="d-flex justify-content-center align-items-center mx-1">
+            <p id="discount--precent" class="m-0">
+              <span id="discount--value"></span><span>%</span>
+            </p>
+          </div>
+        </div>
+        <div class="product--end--price d-flex justify-content-start align-items-center flex-wrap">
+          <!-- end product price (after discount) -->
+          <p id="end-price" class="px-2">290000</p>
+          <p id="currency" class="px-1">تومان</p>
+        </div>
+      </div>
+      <!-- cart -->
+      <!-- * add to cart button -->
+      <div class="add--to--cart d-flex justify-content-start align-items-center flex-wrap">
+        <div class="product--cart--number d-flex justify-content-start align-items-center ms-3">
+          <div id="number-up-div" class="d-flex align-items-end">
+            <ion-icon id="number-up-button" name="caret-up-outline" style="font-size: 30px; cursor: pointer; color: green;"></ion-icon>
+            <!-- Following span could be used for the tooltip -->
+            <!-- <small id="number-up-text" class="text-center">اضافه کردن</small> -->
+          </div>
+          <!-- *HINT* 'data-product-id' must be set as the product unique id to let the server know what product we want to add to the cart -->
+          <div>
+            <input disabled id="product--cart-input" class="mx-1" data-product-id="222" type="text" value="1">
+          </div>
+          <div id="number-down-div" class="d-flex align-items-end">
+            <ion-icon id="number-down-button" name="caret-down-outline" style="font-size: 30px; cursor: pointer; color: red;"></ion-icon>
+            <!-- Following span could be used for the tooltip -->
+            <!-- <span id="number-down-text">کم کردن</span> -->
+          </div>
+        </div>
+        <div class="add--to-cart--button--box ms-4">
+          <button type="button" id="cart--button" class="btn btn-primary d-flex justify-content-center align-items-center">
+            <ion-icon style="font-size: 26px;" name="cart"></ion-icon>&nbsp&nbsp
+            <span style="font-size: 20px; font-family: IRANYekan, sans-serif;">اضافه</span>
+          </button>
+        </div>
+        <!-- * If the product already in the cart, following button appear to delete the product from the cart using ajax -->
+        <!-- * following "input" 'value' and 'data-product-id' set by server to show how many product of this kind is already in the cart -->
+        <input type="hidden" data-product-id="56" name="current-product-in-cart" value="1">
+        <div id="delete-button" class="delete--from--cart btn btn-danger d-flex justify-content-center align-items-center" style="font-size: 20px; font-family: IRANYekan, sans-serif;">
+          <p class="m-0">حذف</p>&nbsp&nbsp
+          <i class="fas fa-trash"></i>
+        </div>
+      </div>
+    </div>
+    <!-- End of prodcut detail -->
+    <!-- * product images part -->
+    <div class="product--image col-lg-5 col-md-6 col-sm-12 col-12">
+      <!-- main image -->
+      <div class="main--img mb-5">
+        <img id="main--img" src="./images/laptop_PNG101812.png" alt="">
+      </div>
+      <!-- If there are other images for the product, show them as carousel -->
+      <div id="carousel--img" class="d-flex mx-auto justify-content-center col-md-8 col-sm-9 col-10">
+        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="./images/laptop_PNG101820.png" width="200px" height="145px" class="d-block" alt="...">
+            </div>
+            <div class="carousel-item">
+              <img src="./images/server_PNG52.png" width="200px" height="145px" class="d-block" alt="...">
+            </div>
+            <div class="carousel-item">
+              <img src="./images/laptop_PNG101812.png" width="200px" height="145px" class="d-block" alt="...">
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+        
+      </div>
+    </div>
+    <!-- End of product image part -->
+
+    <!-- If there is a review for the product put it here -->
+    <div id="review--box" class="mt-5 mb-4 col-md-9 col-sm-10 col-11">
+      <h3 class="display-6" style="font-family: IRANYekan, sans-serif;">نقد و بررسی محصول</h3>
+      <div id="review-content">
+
+      </div>
+    </div>
+
+    <!-- Comments from users -->
+    <div id="comment--box" class="mt-5 mb-4 col-md-9 col-sm-10 col-11">
+      <h3 class="display-6" style="font-family: IRANYekan, sans-serif;">نظرات کاربران</h3>
+      <div id="comment-container">
+
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock content %}
+  
+
+
+  {% comment %} <div id="main-footer-separator" class="my-3 mx-auto"></div> {% endcomment %}
+
+
+{% block scripts %}
+    <script src="{% static 'js/product/product.js' %}" type="module"></script>
+{% endblock scripts %}
