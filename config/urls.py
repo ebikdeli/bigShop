@@ -22,6 +22,8 @@ urlpatterns = [
     path('product/', include('product.urls')),
     # path('accounts_device/', include('accounts_device.urls')),
     path('cart/', include('cart.urls')),
+    path('order/', include('order.urls')),
+    path('payment/', include('payment.urls')),
     path('api-auth/', include('rest_framework.urls')),    # ...defined as 'accounts' subdirectory in 'hosts.py' module
     # path('token-auth/', token_view.obtain_auth_token),    # But in this example 'accounts.tests' module only works with
                                                             # 'accounts' in main domain not as subdomain!

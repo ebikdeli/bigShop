@@ -1,0 +1,143 @@
+@media only screen and (width >= 750px){
+    main{
+        height: 100vh;
+    }
+}
+
+@media only screen and (width < 750px){
+    main{
+        min-height: 600px;
+    }
+}
+
+.profile-content-box > section{
+    border-radius: 7px;
+}
+
+.active{
+    display: contents !important;
+}
+
+
+/* * profile-icon section (START) */
+.profile-icons-list{
+    font-size: 30px;
+    background-color: rgb(188, 248, 250);
+    position: sticky;
+    top: 5px;
+}
+
+.profile-icons-list > i{
+    cursor: pointer;
+}
+
+.profile-icons-list > i[class*='active']{
+    color: rgb(4, 12, 247);
+    font-weight: 600;
+    font-size: 45px;
+}
+
+@media screen and (width >= 992px ){
+    .profile-icons-list{
+        height: 300px;
+    }
+    .profile-content-box{
+        min-height: 300px;
+    }
+}
+/* * profile-icon section (END) */
+
+
+/* * profile-edit section (START) */
+label{
+    font-size: 20px;
+    font-weight: 600;
+    padding-top: 10px;
+    padding-bottom: 7px;
+}
+
+input{
+    font-size: 16px;
+    border-color: rgb(211, 211, 238);
+    border-radius: 8px;
+}
+
+input[name="image"]{
+    display: none;
+}
+
+#custom-input-image-button{
+    padding: 5px 10px;
+    font-size: 16px;
+    border: 1px;
+    color: aliceblue;
+    background-color: rgb(73, 146, 82);
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.edit-icon{
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.profile-error{
+    color: red;
+    font-size: 18px;
+    font-weight: 600;
+}
+/* * profile-edit section (END) */
+
+
+/* * profile-order section */
+.profile-order-unit{
+    width: 90%;
+}
+
+.profile-order-id{
+    font-weight: 600;
+}
+
+
+@media only screen and (width > 700px){
+    .profile-order-section{
+        width: 80%;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .profile-order-row{
+        width: 15%;
+    }
+    .profile-order-id{
+        width: 30%;
+    }
+    .profile-order-quantity{
+        width: 15%;
+    }
+    .profile-order-price{
+        width: 20%;
+    }
+}
+
+@media only screen and (width <= 700px){
+    .profile-order-section{
+        width: 100%;
+        font-size: 16px;
+    }
+}
+/* * profile-order section */
+
+
+/* * profile-security section (START) */
+@media only screen and (width > 650px){
+    #profile-password-change-form > div{
+        position: relative;
+        right: 40px;
+    }
+}
+@media only screen and (width <= 650px){
+    #profile-password-change-form > div{
+        flex-flow: column;
+    }
+}
+/* * profile-security section (END) */

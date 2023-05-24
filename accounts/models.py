@@ -120,9 +120,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Address(models.Model):
     """This model used for comperhensive address usage for user"""
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE,
-                                verbose_name=_('user'))
+                                verbose_name=_('user'),
+                                related_name='address_user')
     state = models.CharField(verbose_name=_('province, state or municipality'), max_length=50, blank=True)
     city = models.CharField(verbose_name=_('city'), max_length=50, blank=True)
     line = models.TextField(verbose_name=_('line'), blank=True, null=True)

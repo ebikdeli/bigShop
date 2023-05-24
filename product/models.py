@@ -86,8 +86,8 @@ class Product(models.Model):
                               null=True)
     name = models.CharField(verbose_name=_('name'), max_length=100, unique=True)
     product_id = models.UUIDField(verbose_name=_('product id'), default=uuid4, blank=True, editable=False, unique=True)
-    price = models.DecimalField(verbose_name=_('price'), max_digits=9, decimal_places=0)
-    discount = models.DecimalField(verbose_name=_('discount'), max_digits=9, decimal_places=0)
+    price = models.DecimalField(verbose_name=_('price'), max_digits=10, decimal_places=0)
+    discount = models.DecimalField(verbose_name=_('discount'), max_digits=9, decimal_places=0, default=0)
     # 'describe' and 'review' will be replaced by ckeditor field
     describe = models.TextField(verbose_name=_('describe'), blank=True)
     review = models.TextField(verbose_name=_('review'), blank=True)
