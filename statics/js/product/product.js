@@ -34,7 +34,7 @@ document.querySelector('#cart--button').addEventListener('click', e => {
     let productNumber = productCart.value;
     let productData = {product_id: productId, product_number: productNumber};
     // Invoke helper function to send data to the server
-    sendPostData('http://127.0.0.1:8000/add-product-cart', productData)
+    sendPostData('http://127.0.0.1:8000/cart/add-product-cart', productData)
     .then(data => {
         // Add delete button if does not exist
         let addToCartBox = document.querySelector('.add--to--cart');

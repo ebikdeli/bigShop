@@ -1,13 +1,11 @@
 """
 There is no product list view. Our main product list view is in index page.
 """
-from django.shortcuts import render, HttpResponse
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView
 from django.db import models
 
 from .models import Product
-
-from typing import Type, Any
+from typing import Type
 
 
 class ProductDetailView(DetailView):

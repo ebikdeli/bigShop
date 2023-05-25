@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.urls import reverse
 
 from .models import Cart
+import json
 
 
 def cart_view(request):
@@ -39,4 +41,28 @@ def clean_cart(request):
     """Clean all items from the Cart and reset sessions"""
     Cart.objects.clean(request.session['cart_id'], request)
     return redirect('cart:cart_view')
- 
+
+
+def add_product_cart(request):
+    """Add item to cart"""
+    if request.method == 'POST':
+        json_data = request.POST.get('data', None)
+        if not json_data:
+            return JsonResponse(data={'msg': 'دیتایی دریافت نشد', 'status': 401})
+        data = json.loads(json_data)
+        product_id = data.get('product-id', None)
+        color_name = data.get('color', None)
+        quantity = data.get('quantity', None)
+        if not product_id:
+            return JsonResponse(data={'msg': 'دیتای ارسالی فاقد اعتبار است', 'status': 206})
+        product_qs = Product.objects.filter(product_id=product_id)
+        if not product_qs.exists():
+            return JsonResponse(data={'msg': 'محصولی با مشخصه ارسالی یافت نشد', 'status': 205})
+        # * Put product into the cart
+        product = product_qs.get()
+        if color_name:
+            color = Color.objects.filter(name=color_name)
+            
+            
+    # If any method except of the 'POST' come, send following message
+    return JsonResponse(data={'msg': 'bad request method', 'status': 402})
