@@ -9,7 +9,7 @@ def get_cart_session(request: HttpRequest) -> None:
     request.session['cart']
     request.session['total_quantity']
     request.session['price']
-    request.session['price_end']
+    request.session['price_pay']
 
 
 def reset_session(request: HttpRequest) -> None:
@@ -17,14 +17,14 @@ def reset_session(request: HttpRequest) -> None:
     request.session['cart'] = dict()
     request.session['total_quantity'] = 0
     request.session['price'] = 0
-    request.session['price_end'] = 0
+    request.session['price_pay'] = 0
 
 
 def set_session_cart(request: HttpRequest, cart: object) -> None:
     """Set cart session values to Cart fields values. 'cart' is an instance of Cart"""
     request.session['total_quantity'] = cart.total_quantity
     request.session['price'] = int(cart.price)
-    request.session['price_end'] = int(cart.price_end)
+    request.session['price_pay'] = int(cart.price_pay)
 
 
 def get_cart_with_id(_model: object, cart_id: int) -> object or None:

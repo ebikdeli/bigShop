@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.http.request import HttpRequest
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -99,9 +100,6 @@ class Cart(models.Model):
                              blank=True,
                              null=True)
     session_key = models.CharField(verbose_name=_('session key'), blank=True, max_length=30)
-    total_quantity = models.PositiveIntegerField(verbose_name=_('total quantity'), default=0)
-    price = models.DecimalField(verbose_name=_('price'), default=0, decimal_places=0, max_digits=10)
-    price_end = models.DecimalField(verbose_name=_('price end'), default=0, decimal_places=0, max_digits=10)
     is_paid = models.BooleanField(verbose_name=_('is paid'), default=False)
     is_active = models.BooleanField(verbose_name=_('is active'), default=True)
     slug = models.SlugField(blank=True)
@@ -112,11 +110,37 @@ class Cart(models.Model):
 
     class Meta:
         ordering = ['-updated']
+        verbose_name = 'Cart'
+        verbose_name_plural = 'Cart'
 
     def __str__(self) -> str:
         if self.user:
             return f'{self.user.username}_Cart({self.id})'
         return f'Cart({self.id})'
+    
+    @property
+    def price(self):
+        """Calculate total price of the current cart"""
+        if not self.cart_item_cart.exists():
+            return 0
+        # Following code is the most brief code to calcualte price of all CartItem of the current Cart
+        return int(self.cartitem_cart.aggregate(price=Sum('price'))['price'])
+    
+    @property
+    def price_pay(self):
+        """Calculate total price_pay of the current cart"""
+        if not self.cart_item_cart.exists():
+            return 0
+        # Following code is the most brief code to calcualte price_pay of all CartItem of the current Cart
+        return int(self.cartitem_cart.aggregate(price_pay=Sum('price_pay'))['price_pay'])
+    
+    @property
+    def quantity(self):
+        """Calculate total items in the current cart"""
+        if not self.cart_item_cart.exists():
+            return 0
+        # Following code is the most brief code to calcualte price_pay of all CartItem of the current Cart
+        return int(self.cartitem_cart.aggregate(quantity=Sum('quantity'))['quantity'])
     
     def save(self, *args, **kwargs) -> None:
         if not self.slug and self.user:
@@ -186,14 +210,14 @@ class CartItem(models.Model):
     cart = models.ForeignKey('Cart',
                              verbose_name=_('cart'),
                              on_delete=models.CASCADE,
-                             related_name='cartitem_cart')
+                             related_name='cart_item_cart')
     product = models.ForeignKey('product.Product',
                                 verbose_name=_('product'),
                                 on_delete=models.CASCADE,
                                 related_name='cartitem_product')
     quantity = models.PositiveIntegerField(verbose_name=_('quantity'), default=1)
     price = models.DecimalField(verbose_name=_('price'), max_digits=10, decimal_places=0, default=0)
-    price_end = models.DecimalField(verbose_name=_('price'), max_digits=10, decimal_places=0, default=0)
+    price_pay = models.DecimalField(verbose_name=_('price_pay'), max_digits=10, decimal_places=0, default=0)
     slug = models.SlugField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -201,7 +225,9 @@ class CartItem(models.Model):
     _quantity = None
 
     class Meta:
-        ordering = ['-created']
+        ordering = ['-updated']
+        verbose_name = 'Cart Item'
+        verbose_name_plural = 'Cart Item'
     
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -216,16 +242,7 @@ class CartItem(models.Model):
         return super().save(*args, **kwargs)
     
     def delete(self, using=None, keep_parents=None):
-        """When item deleted from the cart, 'quantity', 'price', and 'price_end of the cart_item must be subtracted
-        from 'total_quantity' of the parent 'cart'. Overriding this method is the best place to achive this goal."""
-        if self.quantity <= self.cart.total_quantity:
-            self.cart.total_quantity -= self.quantity
-            self.cart.price -= self.price
-            self.cart.price_end -= self.price_end
-        else:
-            print(f'Cart({self.cart.id}) can\'t be less than 0 so we set this: "cart.total_quantity = 0"')
-            self.cart.total_quantity = 0
-            self.cart.price = 0
-            self.cart.price_end = 0
-        self.cart.save()
+        """When item deleted from the cart, add quantity to the parent 'product.stock'"""
+        self.product.stock += self.quantity
+        self.product.save()
         return super().delete(using, keep_parents)

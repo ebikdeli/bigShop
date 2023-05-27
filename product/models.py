@@ -30,6 +30,8 @@ class Category(models.Model):
 
     class Meta:
         ordering = ['name']
+        verbose_name = 'Category'
+        verbose_name_plural = 'Category'
     
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -53,6 +55,8 @@ class Brand(models.Model):
 
     class Meta:
         ordering = ('name',)
+        verbose_name = 'Brand'
+        verbose_name_plural = 'Brand'
     
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -68,6 +72,7 @@ class Brand(models.Model):
 
 class Product(models.Model):
     """Any product and accessory in the shop is an object of this model."""
+    product_id = models.UUIDField(verbose_name=_('product id'), default=uuid4, blank=True, editable=False, unique=True)
     category = models.ManyToManyField('Category',
                                       verbose_name=_('category'),
                                       related_name='product_category',
@@ -85,7 +90,6 @@ class Product(models.Model):
                               blank=True,
                               null=True)
     name = models.CharField(verbose_name=_('name'), max_length=100, unique=True)
-    product_id = models.UUIDField(verbose_name=_('product id'), default=uuid4, blank=True, editable=False, unique=True)
     price = models.DecimalField(verbose_name=_('price'), max_digits=10, decimal_places=0)
     discount = models.DecimalField(verbose_name=_('discount'), max_digits=9, decimal_places=0, default=0)
     # 'describe' and 'review' will be replaced by ckeditor field
@@ -110,6 +114,8 @@ class Product(models.Model):
 
     class Meta:
         ordering = ['-updated']
+        verbose_name = 'Product'
+        verbose_name_plural = 'Product'
     
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -127,7 +133,7 @@ class Product(models.Model):
     
     @property
     def price_end(self):
-        return self.price - self.discount
+        return int(self.price) - int(self.discount)
     
 
 class Color(models.Model):
@@ -143,6 +149,8 @@ class Color(models.Model):
 
     class Meta:
         ordering = ['name']
+        verbose_name = 'Color'
+        verbose_name_plural = 'Colors'
     
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -167,11 +175,14 @@ class ColorPrice(models.Model):
                               related_name='colorprice_color',
                               on_delete=models.CASCADE)
     extra_price = models.DecimalField(verbose_name=_('price'), max_digits=9, decimal_places=0, default=0)
+    cp_stock = models.PositiveIntegerField(verbose_name=_('cp_stock'), default=1)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-updated']
+        verbose_name = 'Color Price'
+        verbose_name_plural = 'Color Prices'
     
     def __str__(self):
         return f'{self.product.name}_{self.color.name}: {self.extra_price}'
