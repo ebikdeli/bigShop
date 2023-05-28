@@ -153,7 +153,7 @@ class Cart(models.Model):
         """Synchronize Cart and cart session after user authenticated."""
         cart = self
         # Fetch all CartItem of the current Cart
-        cartItems = cart.cartitem_cart.all()
+        cartItems = cart.cart_item_cart.all()
         # 1) If cart session is not empty, put its items in the Cart
         if request.session['cart']:
             # 1- If there are CartItems for current Cart (or Cart is not empty)
@@ -175,7 +175,7 @@ class Cart(models.Model):
                             request.session['cart'][product_id] = cI.quantity
                         # 1.2- If the session item is not in the CartItem, add new CartItem to the Cart
                         elif product_id not in productId:
-                            cart.cartitem_cart.create(
+                            cart.cart_item_cart.create(
                                 product=Product.objects.get(product_id=product_id),
                                 quantity=quantity
                             )
@@ -214,7 +214,7 @@ class CartItem(models.Model):
     product = models.ForeignKey('product.Product',
                                 verbose_name=_('product'),
                                 on_delete=models.CASCADE,
-                                related_name='cartitem_product')
+                                related_name='cart_item_product')
     quantity = models.PositiveIntegerField(verbose_name=_('quantity'), default=1)
     price = models.DecimalField(verbose_name=_('price'), max_digits=10, decimal_places=0, default=0)
     price_pay = models.DecimalField(verbose_name=_('price_pay'), max_digits=10, decimal_places=0, default=0)

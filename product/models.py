@@ -175,7 +175,8 @@ class ColorPrice(models.Model):
                               related_name='colorprice_color',
                               on_delete=models.CASCADE)
     extra_price = models.DecimalField(verbose_name=_('price'), max_digits=9, decimal_places=0, default=0)
-    cp_stock = models.PositiveIntegerField(verbose_name=_('cp_stock'), default=1)
+    cp_stock = models.PositiveIntegerField(verbose_name=_('cp_stock'), blank=True)
+    is_available = models.BooleanField(verbose_name=_('is_available'), default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

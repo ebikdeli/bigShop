@@ -2,6 +2,7 @@
 Functions used for clean code practice and reusability. 'cart_id' session needed to hold value of the current cart
 """
 from django.http.request import HttpRequest
+from typing import Tuple
 
 
 def get_cart_session(request: HttpRequest) -> None:
@@ -37,7 +38,7 @@ def get_cart_with_id(_model: object, cart_id: int) -> object or None:
     return None
 
 
-def get_or_create_cart_unauth_session_key(_model: object, request: HttpRequest) -> object:
+def get_or_create_cart_unauth_session_key(_model: object, request: HttpRequest) -> object | None:
     """Get 'Cart' as '_model'. Get or create Cart object for 'unauthenticated' user with 'session_key'.
     If successful returns Cart object else returns None"""
     cart = None
@@ -52,7 +53,7 @@ def get_or_create_cart_unauth_session_key(_model: object, request: HttpRequest) 
     return cart
 
 
-def get_or_create_cart_auth_session_key(_model: object, request: HttpRequest) -> object:
+def get_or_create_cart_auth_session_key(_model: object, request: HttpRequest) -> object | None:
     """Get 'Cart' as '_model'. Get or create Cart object for 'authenticated' user with 'session_key'.
     If successful returns Cart object else returns None"""
     cart = None
@@ -64,7 +65,7 @@ def get_or_create_cart_auth_session_key(_model: object, request: HttpRequest) ->
         # cart_session = Cart.objects.filter(session_key=request.session.session_key)
         # If there is no Cart with current session_key either, create a new Cart with current user and current session_key
         if not cart_session.exists():
-            # ? If session_key has not been created already, create it
+            # ? If session_key has not been created already, create it (If following 'if' executed, it means there is a problem in our program!)
             print('SESSION_KEY: ', request.session.session_key)
             if not request.session.exists(request.session.session_key):
                 session_key = request.session.create()
@@ -86,7 +87,7 @@ def get_or_create_cart_auth_session_key(_model: object, request: HttpRequest) ->
     return cart
 
 
-def get_cart_and_cart_item_id(cart_model: object, cart_id: int, cart_item_id: int) -> tuple():
+def get_cart_and_cart_item_id(cart_model: object, cart_id: int, cart_item_id: int) -> Tuple | None:
     """
     Helper function to get correct CartItem. Mainly used in 'Cart.change_item_quantity' and 'Cart.delete_item' methods.
     If properly executed return tuple consists of '(CartItem instance, CartItem.product.product_id)'. Otherwise returns None
@@ -95,7 +96,7 @@ def get_cart_and_cart_item_id(cart_model: object, cart_id: int, cart_item_id: in
     if not cart:
         return None
     # Follow line is more optimal than this: "CartItem.objects.filter()" because 'cart' has fewer cartitem than CartItem
-    cartItem_qs = cart.cartitem_cart.filter(id=cart_item_id)
+    cartItem_qs = cart.cart_item_cart.filter(id=cart_item_id)
     if not cartItem_qs.exists():
         return None
     cartItem = cartItem_qs.get()
@@ -103,7 +104,7 @@ def get_cart_and_cart_item_id(cart_model: object, cart_id: int, cart_item_id: in
     return cartItem, cartItemProductId
 
 
-def synch_cart_session_cart_after_authentication(_model: object, request: HttpRequest) -> tuple:
+def synch_cart_session_cart_after_authentication(_model: object, request: HttpRequest) -> Tuple:
     """Helper function. Arguements: _model=Cart, request=HttpRequest.
     After user login or signup, create or get Cart for the user, set 'cart_id' session to current cart
     and synchronize Cart data with session data. Returns a tuple consist of (True, cart)."""
