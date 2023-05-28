@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.urls import reverse
 
 from .models import Cart
+from product.models import Product, Color
 import json
 
 

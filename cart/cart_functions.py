@@ -23,7 +23,7 @@ def reset_session(request: HttpRequest) -> None:
 
 def set_session_cart(request: HttpRequest, cart: object) -> None:
     """Set cart session values to Cart fields values. 'cart' is an instance of Cart"""
-    request.session['total_quantity'] = cart.total_quantity
+    request.session['total_quantity'] = cart.quantity
     request.session['price'] = int(cart.price)
     request.session['price_pay'] = int(cart.price_pay)
 
@@ -87,12 +87,13 @@ def get_or_create_cart_auth_session_key(_model: object, request: HttpRequest) ->
     return cart
 
 
-def get_cart_and_cart_item_id(cart_model: object, cart_id: int, cart_item_id: int) -> Tuple | None:
+def get_cart_and_cart_item_id(cart_model: object, cart_item_id: int, cart: object, cart_id: int) -> Tuple | None:
     """
     Helper function to get correct CartItem. Mainly used in 'Cart.change_item_quantity' and 'Cart.delete_item' methods.
     If properly executed return tuple consists of '(CartItem instance, CartItem.product.product_id)'. Otherwise returns None
     """
-    cart = get_cart_with_id(cart_model, cart_id)
+    if not cart and cart_id:
+        cart = get_cart_with_id(cart_model, cart_id)
     if not cart:
         return None
     # Follow line is more optimal than this: "CartItem.objects.filter()" because 'cart' has fewer cartitem than CartItem

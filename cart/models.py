@@ -10,87 +10,6 @@ from .cart_functions import reset_session, set_session_cart, get_cart_with_id,\
                             get_cart_and_cart_item_id
 
 
-class CartManager(models.Manager):
-    """Customized manager to add functionality to the Cart manager"""
-    def append_item(self, quantity: (str or int), cart_id: int, request: HttpRequest, product_id: str, *args, **kwargs) -> bool:
-        """Append new items to the Cart by creating new CartItem if not exists"""
-        cartItem = None
-        cart = get_cart_with_id(self.model, cart_id)
-        product = Product.objects.get(product_id=product_id)
-        cartItem_qs = cart.cartitem_cart.filter(product=product)
-        if cartItem_qs.exists():
-            print(f'{product.name} already exists in the cart just update it')
-            cartItem = cartItem_qs.get()
-            cartItem.quantity += int(quantity)
-            cartItem.save()
-            # Update 'cart' session with new quantity
-            request.session['cart'][product_id] += int(quantity)
-        else:
-            print('New cart item created')
-            cartItem = cart.cartitem_cart.create(product=product, quantity=int(quantity))
-            # Update 'cart' session with new quantity
-            request.session['cart'].update({product_id: int(quantity)})
-        # Update session with updated Cart
-        set_session_cart(request, cartItem.cart)
-        return True
-
-
-    def change_item_quantity(self, quantity: (str or int), cart_id: int, request: HttpRequest,
-                                   cart_item_id: int=None, product_id: str=None, *args, **kwargs) -> bool:
-        """Change the quantity of an item by its 'cart_item_id' and 'cart_id' fields. At least one of the 'cart_item_id'
-        or 'product_id' arguements must be true. If successfully done returns True othrewise returns False."""
-        if cart_item_id:
-            cartItem, cartItemProductId = get_cart_and_cart_item_id(self.model, cart_id, cart_item_id)
-        # If there is no 'cart_item_id', try to get the CartItem with 'Product.product_id'.
-        elif product_id:
-            cart = get_cart_with_id(self.model, cart_id)
-            product = Product.objects.get(product_id=product_id)
-            cartItem_qs = cart.cartitem_cart.filter(product=product)
-            if not cartItem_qs.exists():
-                print('Item does not exist with the product_id code')
-                return None
-            cartItem = cartItem_qs.get()
-            cartItemProductId = cartItem.quantity
-        cartItem.quantity = int(quantity)
-        cartItem.save()
-        # Update 'cart' session with new quantity
-        request.session['cart'][str(cartItem.product.product_id)] = int(quantity)
-        # Update session with updated Cart
-        set_session_cart(request, cartItem.cart)
-        return True
-
-
-    def delete_item(self, cart_id: int, request: HttpRequest, cart_item_id: int, *args, **kwargs) -> bool:
-        """Delete an item from the cart by its 'CartItem.id'. If properly executed returns True else False.
-        Oprional: We can add the functionality that be able to delete an item with 'Product.product_id' field."""
-        cartItem, cartItemProductId = get_cart_and_cart_item_id(self.model, cart_id, cart_item_id)
-        cartItem.delete()
-        # Delete the product_id from 'cart' session
-        r = request.session['cart'].pop(str(cartItemProductId))
-        # print('deleted item: ', cartItemProductId, '      ', r)
-        # Update 'total_quantity' 'price' and 'price_end' session that automatically updated in the current Cart
-        set_session_cart(request, cartItem.cart)
-        return True
-        
-
-    def clean(self, cart_id: int, request: HttpRequest, **kwargs) -> bool:
-        """Clean the cart and delete all items in it and reset cart sessions. If delete was a success
-        returns True otherwise return False"""
-        # Reset all cart sessions
-        reset_session(request)
-        cart = get_cart_with_id(self.model, cart_id)
-        if not cart:
-            return None
-        cartItems = cart.cartitem_cart.all()
-        if not cartItems.exists():
-            print('Cart is already clean!')
-            return True
-        for cI in cartItems:
-            cI.delete()
-        print('Everything deleted from the cart and Cart is clean')
-        return True
-
-
 class Cart(models.Model):
     """Any user (even unauthenticated ones) has a cart that works with 'cart' session."""
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -105,8 +24,6 @@ class Cart(models.Model):
     slug = models.SlugField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
-    objects = CartManager()
 
     class Meta:
         ordering = ['-updated']
@@ -148,6 +65,101 @@ class Cart(models.Model):
         elif not self.slug and not self.user:
             self.slug = f'cart({self.id})'
         return super().save(*args, **kwargs)
+    
+    def append_item(self, request: HttpRequest, quantity: (str or int), product_id: str, *args, **kwargs) -> bool:
+        """Append new items to the current cart by creating new CartItem if not exists.
+        If 'product.stock' is less than the 'quantity' selected by customer, returns False"""
+        cart = self
+        cartItem = None
+        product = Product.objects.get(product_id=product_id)
+        cartItem_qs = cart.cart_item_cart.filter(product=product)
+        if cartItem_qs.exists():
+            print(f'{product.name} already exists in the cart just update it')
+            cartItem = cartItem_qs.get()
+            # If there is not enough items in the Product.stock, stop operation
+            if product.stock < int(quantity):
+                return False
+            product.stock -= int(quantity)
+            product.save()
+            cartItem.quantity += int(quantity)
+            cartItem.save()
+            
+            # Update 'cart' session with new quantity
+            request.session['cart'][product_id] += int(quantity)
+        else:
+            print('New cart item created')
+            cartItem = cart.cart_item_cart.create(product=product, quantity=int(quantity))
+            # Update 'cart' session with new quantity
+            request.session['cart'].update({product_id: int(quantity)})
+        # Update session with updated Cart
+        set_session_cart(request, cartItem.cart)
+        return True
+
+
+    def change_item_quantity(self, quantity: (str or int), request: HttpRequest,
+                                   cart_item_id: int=None, product_id: str=None, *args, **kwargs) -> bool:
+        """Change the quantity of an item by its 'cart_item_id' field. At least one of the 'cart_item_id'
+        or 'product_id' arguements must be true. If successfully done returns True othrewise returns False."""
+        if cart_item_id:
+            cartItem, cartItemProductId = get_cart_and_cart_item_id(self.model, cart_item_id, cart=self)
+        # If there is no 'cart_item_id', try to get the CartItem with 'Product.product_id'.
+        elif product_id:
+            product = Product.objects.get(product_id=product_id)
+            cartItem_qs = self.cartitem_cart.filter(product=product)
+            if not cartItem_qs.exists():
+                print('Item does not exist with the product_id code')
+                return None
+            cartItem = cartItem_qs.get()
+            cartItemProductId = cartItem.quantity
+        # If there is not enough items in the Product.stock, stop operation
+        if product.stock < int(quantity):
+            return False
+        product.save()
+        cartItem.quantity = int(quantity)
+        cartItem.save()
+        # Update 'cart' session with new quantity
+        request.session['cart'][str(cartItem.product.product_id)] = int(quantity)
+        # Update session with updated Cart
+        set_session_cart(request, cartItem.cart)
+        return True
+
+
+    def delete_item(self, cart_id: int, request: HttpRequest, cart_item_id: int, *args, **kwargs) -> bool:
+        """Delete an item from the cart by its 'CartItem.id'. If properly executed returns True else False.
+        Oprional: We can add the functionality that be able to delete an item with 'Product.product_id' field."""
+        cartItem, cartItemProductId = get_cart_and_cart_item_id(self.model, cart_id, cart_item_id)
+        # Add the current 'CartItem.quantity' to 'product.stock' before being deleted
+        cartItem.product.stock += int(cartItem.quantity)
+        cartItem.product.save()
+        cartItem.delete()
+        # Delete the product_id from 'cart' session
+        r = request.session['cart'].pop(str(cartItemProductId))
+        # print('deleted item: ', cartItemProductId, '      ', r)
+        # Update 'total_quantity' 'price' and 'price_end' session that automatically updated in the current Cart
+        set_session_cart(request, cartItem.cart)
+        return True
+        
+
+    def clean(self, cart_id: int, request: HttpRequest, **kwargs) -> bool:
+        """Clean the cart and delete all items in it and reset cart sessions. If delete was a success
+        returns True otherwise return False"""
+        # Reset all cart sessions
+        reset_session(request)
+        cart = get_cart_with_id(self.model, cart_id)
+        if not cart:
+            return None
+        cartItems = cart.cartitem_cart.all()
+        if not cartItems.exists():
+            print('Cart is already clean!')
+            return True
+        for cI in cartItems:
+            # Add CartItem.quantity to the 'product.stock' before deleting the CartItem
+            cI.product.stock += int(cI.quantity)
+            cI.product.save()
+            cI.delete()
+        print('Everything deleted from the cart and Cart is clean')
+        return True
+
     
     def sync_session_cart_after_authentication(self, request: HttpRequest, *args, **kwargs):
         """Synchronize Cart and cart session after user authenticated."""
