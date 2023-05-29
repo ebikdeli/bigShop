@@ -5,7 +5,7 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 
-from product.models import Product
+from product.models import Product, Color, ColorPrice
 from .cart_functions import reset_session, set_session_cart, get_cart_with_id,\
                             get_cart_and_cart_item_id
 
@@ -66,13 +66,15 @@ class Cart(models.Model):
             self.slug = f'cart({self.id})'
         return super().save(*args, **kwargs)
     
-    def append_item(self, request: HttpRequest, quantity: (str or int), product_id: str, *args, **kwargs) -> bool:
+    def append_item(self, request: HttpRequest, quantity: (str or int), product_id: str, color_name: str, *args, **kwargs) -> bool:
         """Append new items to the current cart by creating new CartItem if not exists.
-        If 'product.stock' is less than the 'quantity' selected by customer, returns False"""
+        If 'product.stock' is less than the 'quantity' selected by customer, stop the operation
+        and returns False"""
         cart = self
         cartItem = None
         product = Product.objects.get(product_id=product_id)
         cartItem_qs = cart.cart_item_cart.filter(product=product)
+        # If item is already in the user cart
         if cartItem_qs.exists():
             print(f'{product.name} already exists in the cart just update it')
             cartItem = cartItem_qs.get()
@@ -83,77 +85,87 @@ class Cart(models.Model):
             product.save()
             cartItem.quantity += int(quantity)
             cartItem.save()
-            
             # Update 'cart' session with new quantity
-            request.session['cart'][product_id] += int(quantity)
+            for item in request.session['cart']:
+                if item['product_id'] == product_id:
+                    item['quantity'] += int(quantity)
+                    if color_name:
+                        item['color': color_name]
+        # If the item is not in the cart before
         else:
             print('New cart item created')
             cartItem = cart.cart_item_cart.create(product=product, quantity=int(quantity))
             # Update 'cart' session with new quantity
-            request.session['cart'].update({product_id: int(quantity)})
+            new_item_data = {'product_id': product.product_id, 'quantity': int(quantity)}
+            if color_name:
+                new_item_data.update({'color': color_name})
+            request.session['cart'].append(new_item_data)
         # Update session with updated Cart
         set_session_cart(request, cartItem.cart)
         return True
 
 
     def change_item_quantity(self, quantity: (str or int), request: HttpRequest,
-                                   cart_item_id: int=None, product_id: str=None, *args, **kwargs) -> bool:
+                                   cart_item_id: int=None, *args, **kwargs) -> bool:
         """Change the quantity of an item by its 'cart_item_id' field. At least one of the 'cart_item_id'
         or 'product_id' arguements must be true. If successfully done returns True othrewise returns False."""
-        if cart_item_id:
-            cartItem, cartItemProductId = get_cart_and_cart_item_id(self.model, cart_item_id, cart=self)
-        # If there is no 'cart_item_id', try to get the CartItem with 'Product.product_id'.
-        elif product_id:
-            product = Product.objects.get(product_id=product_id)
-            cartItem_qs = self.cartitem_cart.filter(product=product)
-            if not cartItem_qs.exists():
-                print('Item does not exist with the product_id code')
-                return None
-            cartItem = cartItem_qs.get()
-            cartItemProductId = cartItem.quantity
-        # If there is not enough items in the Product.stock, stop operation
+        cartItem_qs = self.cart_item_cart.filter(id=cart_item_id)
+        if not cartItem_qs.exists():
+            return False
+        cartItem = cartItem_qs.get()
+        product = cartItem.product
+        # If there is not enough items in the Product.stock, stop the operation
         if product.stock < int(quantity):
             return False
+        # Subtract number of added item from product stock
+        product.stock -= int(quantity)
         product.save()
         cartItem.quantity = int(quantity)
         cartItem.save()
         # Update 'cart' session with new quantity
-        request.session['cart'][str(cartItem.product.product_id)] = int(quantity)
+        for item in request.session['cart']:
+            if item['product_id'] == product.product_id:
+                item['quantity'] = int(quantity)
         # Update session with updated Cart
         set_session_cart(request, cartItem.cart)
         return True
 
 
-    def delete_item(self, cart_id: int, request: HttpRequest, cart_item_id: int, *args, **kwargs) -> bool:
+    def delete_item(self, request: HttpRequest, cart_item_id: int, *args, **kwargs) -> bool:
         """Delete an item from the cart by its 'CartItem.id'. If properly executed returns True else False.
         Oprional: We can add the functionality that be able to delete an item with 'Product.product_id' field."""
-        cartItem, cartItemProductId = get_cart_and_cart_item_id(self.model, cart_id, cart_item_id)
+        cartItem_qs = self.cart_item_cart.filter(id=cart_item_id)
+        if not cartItem_qs.exists():
+            return None
+        cartItem = cartItem_qs.get()
+        product = cartItem.product
         # Add the current 'CartItem.quantity' to 'product.stock' before being deleted
-        cartItem.product.stock += int(cartItem.quantity)
-        cartItem.product.save()
+        product.stock += int(cartItem.quantity)
+        product.save()
         cartItem.delete()
-        # Delete the product_id from 'cart' session
-        r = request.session['cart'].pop(str(cartItemProductId))
-        # print('deleted item: ', cartItemProductId, '      ', r)
+        # Delete current item from 'cart' session
+        for item in request.session['cart']:
+            if item['product_id'] == product.product_id:
+                request.session['cart'].remove(item)
         # Update 'total_quantity' 'price' and 'price_end' session that automatically updated in the current Cart
         set_session_cart(request, cartItem.cart)
         return True
         
 
-    def clean(self, cart_id: int, request: HttpRequest, **kwargs) -> bool:
+    def clean(self, request: HttpRequest, **kwargs) -> bool:
         """Clean the cart and delete all items in it and reset cart sessions. If delete was a success
         returns True otherwise return False"""
         # Reset all cart sessions
         reset_session(request)
-        cart = get_cart_with_id(self.model, cart_id)
+        cart = self
         if not cart:
             return None
-        cartItems = cart.cartitem_cart.all()
+        cartItems = cart.cart_item_cart.all()
         if not cartItems.exists():
             print('Cart is already clean!')
             return True
         for cI in cartItems:
-            # Add CartItem.quantity to the 'product.stock' before deleting the CartItem
+            # Add back CartItem.quantity to the 'product.stock' before deleting the CartItem
             cI.product.stock += int(cI.quantity)
             cI.product.save()
             cI.delete()
@@ -167,54 +179,62 @@ class Cart(models.Model):
         # Fetch all CartItem of the current Cart
         cartItems = cart.cart_item_cart.all()
         # 1) If cart session is not empty, put its items in the Cart
-        if request.session['cart']:
-            # 1- If there are CartItems for current Cart (or Cart is not empty)
-            if cartItems:
-                # First we need to list all current CartItems 'product.product_id' field to know what 'product_id's are
-                # already in the 'cart' session to prevent duplication.
-                productId = list()
-                for cI in cartItems:
-                    productId.append(str(cI.product.product_id))
-                
-                # Check If the item in the 'cart' session is same as any item in the CartItem
-                for cI in cartItems:
-                    for product_id, quantity in request.session['cart'].items():
-                        # 1.1- If the session item is already in the CartItem, just add quantity to the current CartItem
-                        if product_id == str(cI.product.product_id):
-                            cI.quantity += quantity
-                            print(f'{product_id} is already in the cart and updated')
-                            cI.save()
-                            request.session['cart'][product_id] = cI.quantity
-                        # 1.2- If the session item is not in the CartItem, add new CartItem to the Cart
-                        elif product_id not in productId:
-                            cart.cart_item_cart.create(
-                                product=Product.objects.get(product_id=product_id),
-                                quantity=quantity
-                            )
-                            # Append current 'product_id' to 'productId' list to prevent duplication
-                            productId.append(product_id)
-                            print(f'{product_id} was not in the cart but added')
-                    # 1.3- If the current CartItem is not in the 'cart' session, add it to the session
-                    if str(cI.product.product_id) not in request.session['cart'].keys():
-                        request.session['cart'][str(cI.product.product_id)] = cI.quantity
-            # 2- If current Cart is empty (or there is no CartItem) just put all items from cart sesison in the Cart
+        try:
+            if request.session['cart']:
+                # 1- If there are CartItems for current Cart (or Cart is not empty)
+                if cartItems:
+                    # First we need to list all current CartItems 'product.product_id' field to know what 'product_id's are
+                    # already in the 'cart' session to prevent duplication.
+                    productId = list()
+                    for cI in cartItems:
+                        productId.append(str(cI.product.product_id))
+                    
+                    # Check If the item in the 'cart' session is same as any item in the CartItem
+                    for cI in cartItems:
+                        for item in request.session['cart']:
+                            # Add every item['product_id'] to a list to be used in '1.3' step
+                            current_cart_product_id = list()
+                            current_cart_product_id.append(item['product_id'])
+                            # 1.1- If the session item is already in the CartItem, just add quantity to the current CartItem
+                            if cI.product.product_id == item['product_id']:
+                                cI.quantity += int(item['quantity'])
+                                print(f"{item['product_id']} is already in the cart and updated")
+                                cI.save()
+                                item['quantity'] = cI.quantity
+                            # 1.2- If the session item is not in the CartItem, add new CartItem to the Cart
+                            elif item['product_id'] not in productId:
+                                cart.cart_item_cart.create(
+                                    product=Product.objects.get(product_id=item['product_id']),
+                                    quantity=int(item['quantity'])
+                                )
+                                # Append current 'product_id' to 'productId' list to prevent duplication
+                                productId.append(item['product_id'])
+                                print(f"{item['product_id']} was not in the cart but added")
+                        # 1.3- If the current CartItem is not in the 'cart' session, add it to the session
+                        if str(cI.product.product_id) not in current_cart_product_id:
+                            # Later we can add ColorPrice functionality to this section
+                            request.session['cart'].append({'product_id': cI.product.product_id, 'quantity': int(cI.quantity)})
+                # 2- If current Cart is empty (or there is no CartItem) just put all items from cart sesison in the Cart
+                else:
+                    for item in request.session['cart']:
+                        cart.cartitem_cart.create(
+                            product=Product.objects.get(product_id=item['product_id']),
+                            quantity = int(item['quantity'])
+                        )
+            # 2) If cart session is empty, check if there is any item in Cart to put them into the empty session
             else:
-                for product_id, quantity in request.session['cart'].items():
-                    cart.cartitem_cart.create(
-                        product=Product.objects.get(product_id=product_id),
-                        quantity = quantity
-                    )
-        # 2) If cart session is empty, check if there is any item in Cart to put them into the empty session
-        else:
-            if cartItems:
-                for cI in cartItems:
-                    request.session['cart'].update({str(cI.product.product_id): cI.quantity})
-            # If both the Cart and cart session are empty, just return None
-            else:
-                return None
-        # Update 'total_quantity' 'price' and 'price_end' session that automatically updated in the current Cart
-        set_session_cart(request, cart)
-        return True
+                if cartItems:
+                    for cI in cartItems:
+                        request.session['cart'].append({'product_id': cI.product.product_id, 'quantity': int(cI.quantity)})
+                # If both the Cart and cart session are empty, just return None
+                else:
+                    return None
+            # Update 'total_quantity' 'price' and 'price_end' session that automatically updated in the current Cart
+            set_session_cart(request, cart)
+            return True
+        except KeyError:
+            print('No cart_id found in session so no synchnorization happened')
+            return False
 
 
 class CartItem(models.Model):

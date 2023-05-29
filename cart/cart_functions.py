@@ -15,7 +15,7 @@ def get_cart_session(request: HttpRequest) -> None:
 
 def reset_session(request: HttpRequest) -> None:
     """Reset all sessions to default value"""
-    request.session['cart'] = dict()
+    request.session['cart'] = list()
     request.session['total_quantity'] = 0
     request.session['price'] = 0
     request.session['price_pay'] = 0

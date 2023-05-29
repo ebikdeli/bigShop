@@ -47,23 +47,31 @@ def clean_cart(request):
 def add_product_cart(request):
     """Add item to cart"""
     if request.method == 'POST':
+        # * Process received data and check if there is no error
         json_data = request.POST.get('data', None)
         if not json_data:
-            return JsonResponse(data={'msg': 'دیتایی دریافت نشد', 'status': 401})
+            return JsonResponse(data={'msg': 'دیتایی دریافت نشد', 'code': 402, 'status': 'nok'})
         data = json.loads(json_data)
         product_id = data.get('product-id', None)
         color_name = data.get('color', None)
         quantity = data.get('quantity', None)
         if not product_id:
-            return JsonResponse(data={'msg': 'دیتای ارسالی فاقد اعتبار است', 'status': 206})
+            return JsonResponse(data={'msg': 'دیتای ارسالی فاقد اعتبار است', 'code': 402, 'status': 'nok'})
         product_qs = Product.objects.filter(product_id=product_id)
         if not product_qs.exists():
-            return JsonResponse(data={'msg': 'محصولی با مشخصه ارسالی یافت نشد', 'status': 205})
+            return JsonResponse(data={'msg': 'محصولی با مشخصه ارسالی یافت نشد', 'code': 402, 'status': 'nok'})
         # * Put product into the cart
+        try:
+            cart_id = request.session['cart_id']
+        except KeyError:
+            return JsonResponse({'msg': 'سرور در حال حاضر مشکل دارد', 'code': 402, 'status': 'nok'})
+        cart_qs = Cart.objects.filter(id=cart_id)
+        if not cart_qs.exists():
+            return JsonResponse(data={'msg': 'ارتباط با سبد خرید برقرار نشد', 'code': 402, 'status': 'nok'})
+        cart = cart_qs.get()
         product = product_qs.get()
         if color_name:
             color = Color.objects.filter(name=color_name)
             
-            
     # If any method except of the 'POST' come, send following message
-    return JsonResponse(data={'msg': 'bad request method', 'status': 402})
+    return JsonResponse(data={'msg': 'bad request method', 'code': 402, 'status': 'nok'})

@@ -43,5 +43,11 @@ class InitialSessionMiddleware:
             request.session['cart_id'] = cart.id
         else:
             request.session['cart_id'] = 0
+            # ! If there is no Cart get or created before, create a new Cart for current user
+            new_cart = Cart.objects.create()
+            if request.user.is_authenticated:
+                new_cart.user = request.user
+                new_cart.save()
+            request.session['cart_id'] = int(new_cart.id)
         # print("Cart middle ware last", request.session.items())
         return None
