@@ -8,6 +8,9 @@ import json
 
 
 def cart_view(request):
+    # Following if block used to test how data received from client shown in backend
+    # if request.method == 'POST':
+    #     print(request.POST)
     return render(request, 'cart/templates/cart/cart_view.html')
 
 
@@ -61,17 +64,62 @@ def add_product_cart(request):
         if not product_qs.exists():
             return JsonResponse(data={'msg': 'محصولی با مشخصه ارسالی یافت نشد', 'code': 402, 'status': 'nok'})
         # * Put product into the cart
-        try:
-            cart_id = request.session['cart_id']
-        except KeyError:
-            return JsonResponse({'msg': 'سرور در حال حاضر مشکل دارد', 'code': 402, 'status': 'nok'})
+        if request.user.is_authenticated:
+            cart_id = request.user.cart_user.first().id
+        else:
+            try:
+                cart_id = request.session['cart_id']
+            except KeyError:
+                return JsonResponse({'msg': 'سرور در حال حاضر مشکل دارد', 'code': 402, 'status': 'nok'})
         cart_qs = Cart.objects.filter(id=cart_id)
         if not cart_qs.exists():
             return JsonResponse(data={'msg': 'ارتباط با سبد خرید برقرار نشد', 'code': 402, 'status': 'nok'})
         cart = cart_qs.get()
         product = product_qs.get()
-        if color_name:
-            color = Color.objects.filter(name=color_name)
-            
+        result = cart.append_item(request, quantity, product_id, color_name)
+        if not result:
+            return JsonResponse(data={'msg': 'مشکلی پیش آمده و محصول در سبد خرید ثبت نشد', 'code': 402, 'status': 'nok'})
+        # Item successfully added to cart
+        return JsonResponse(data={'msg': 'محصول در سبد خرید قرار گرفت', 'code': 201, 'status': 'ok'})
     # If any method except of the 'POST' come, send following message
-    return JsonResponse(data={'msg': 'bad request method', 'code': 402, 'status': 'nok'})
+    return JsonResponse(data={'msg': 'bad request method', 'code': 400, 'status': 'nok'})
+
+
+def change_product_cart(request):
+    """Change number of items in the cart"""
+    if request.method == 'POST':
+        # * Process POST data
+        json_data = request.POST.get('data', None)
+        if not json_data:
+            return JsonResponse(data={'msg': 'هیچ دیتایی دریافت نشد', 'code': 402, 'status': 'nok'})
+        data = json.loads(json_data)
+        product_id = data.get('product_id', None)
+        quantity = data.get('quantity', None)
+        if not product_id:
+            return JsonResponse(data={'msg': 'دیتای ارسالی فاقد اعتبار است', 'code': 402, 'status': 'nok'})
+        product_qs = Product.objects.filter(product_id=product_id)
+        if not product_qs.exists():
+            return JsonResponse(data={'msg': 'محصولی با مشخصه ارسالی یافت نشد', 'code': 402, 'status': 'nok'})
+        # * Put product into the cart
+        if request.user.is_authenticated:
+            cart_id = request.user.cart_user.first().id
+        else:
+            try:
+                cart_id = request.session['cart_id']
+            except KeyError:
+                return JsonResponse({'msg': 'سرور در حال حاضر مشکل دارد', 'code': 402, 'status': 'nok'})
+        cart_qs = Cart.objects.filter(id=cart_id)
+        if not cart_qs.exists():
+            return JsonResponse(data={'msg': 'ارتباط با سبد خرید برقرار نشد', 'code': 402, 'status': 'nok'})
+        cart = cart_qs.get()
+        product = product_qs.get()
+        # Get current CartItem
+        cart_item_id_qs = cart.cart_item_cart.filter(product=product)
+        if not cart_item_id_qs.exists():
+            return JsonResponse({'msg': 'آیتم مورد نظر پیدا نشد', 'code': 402, 'status': 'nok'})
+        cart_item_id = cart_item_id_qs.get()
+        result = cart.change_item_quantity(quantity, request, cart_item_id)
+        if not result:
+            return JsonResponse(data={'msg': 'عملیات تغییر محصول با مشکل مواجه شد', 'code': 402, 'status': 'nok'})
+        return JsonResponse(data={'msg': 'تغییر تعداد محصول با موفقیت انجام شد', 'code': 201, 'status': 'ok'})
+    return JsonResponse(data={'msg': 'متد اشتباه است', 'code': 400, 'status': 'nok'})

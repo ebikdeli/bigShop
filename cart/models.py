@@ -41,7 +41,7 @@ class Cart(models.Model):
         if not self.cart_item_cart.exists():
             return 0
         # Following code is the most brief code to calcualte price of all CartItem of the current Cart
-        return int(self.cartitem_cart.aggregate(price=Sum('price'))['price'])
+        return int(self.cart_item_cart.aggregate(price=Sum('price'))['price'])
     
     @property
     def price_pay(self):
@@ -49,7 +49,7 @@ class Cart(models.Model):
         if not self.cart_item_cart.exists():
             return 0
         # Following code is the most brief code to calcualte price_pay of all CartItem of the current Cart
-        return int(self.cartitem_cart.aggregate(price_pay=Sum('price_pay'))['price_pay'])
+        return int(self.cart_item_cart.aggregate(price_pay=Sum('price_pay'))['price_pay'])
     
     @property
     def quantity(self):
@@ -57,7 +57,7 @@ class Cart(models.Model):
         if not self.cart_item_cart.exists():
             return 0
         # Following code is the most brief code to calcualte price_pay of all CartItem of the current Cart
-        return int(self.cartitem_cart.aggregate(quantity=Sum('quantity'))['quantity'])
+        return int(self.cart_item_cart.aggregate(quantity=Sum('quantity'))['quantity'])
     
     def save(self, *args, **kwargs) -> None:
         if not self.slug and self.user:
@@ -80,9 +80,11 @@ class Cart(models.Model):
             cartItem = cartItem_qs.get()
             # If there is not enough items in the Product.stock, stop operation
             if product.stock < int(quantity):
+                print('Not enough product in the stock')
                 return False
             product.stock -= int(quantity)
             product.save()
+            product.refresh_from_db()
             cartItem.quantity += int(quantity)
             cartItem.save()
             # Update 'cart' session with new quantity
@@ -93,10 +95,16 @@ class Cart(models.Model):
                         item['color': color_name]
         # If the item is not in the cart before
         else:
-            print('New cart item created')
+            if product.stock < int(quantity):
+                print('Not enough product in the stock')
+                return False
+            product.stock -= int(quantity)
+            product.save()
+            product.refresh_from_db()
             cartItem = cart.cart_item_cart.create(product=product, quantity=int(quantity))
+            print('New cart item created')
             # Update 'cart' session with new quantity
-            new_item_data = {'product_id': product.product_id, 'quantity': int(quantity)}
+            new_item_data = {'product_id': str(product.product_id), 'quantity': int(quantity)}
             if color_name:
                 new_item_data.update({'color': color_name})
             request.session['cart'].append(new_item_data)

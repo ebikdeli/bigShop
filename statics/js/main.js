@@ -5,6 +5,17 @@ import {sendPostData} from './ajax.js';
 
 
 
+// * Following ajax call used to test how to parse received FormData in the server
+// sendPostData('http://127.0.0.1:8000/cart/', {'quantity': 4, 'product_id': '123456'})
+// .then(data => {
+//     console.log(data);
+// })
+// .catch(err => {
+//     console.log(err);
+// })
+
+
+
 // *** Add to cart button
 const addCartButtons = document.querySelectorAll('.add-to-cart');
 Array.from(addCartButtons).forEach(cartButton => {
