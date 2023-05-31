@@ -17,7 +17,7 @@ class TestCart(TestCase):
     
     def test_create_anynomous_cart(self):
         """Test if we can create anynomous cart"""
-        cart = Cart.objects.create(price=10000)
+        cart = Cart.objects.create()
         self.assertIn(cart, Cart.objects.all())
         self.assertIsNone(cart.user)
     
@@ -78,13 +78,14 @@ class TestCart(TestCase):
         'cart_item' field on CartItem"""
         cart = Cart.objects.create()
         # Create some numbers of "CartItem"s with arbitrary number of 'quantity'
-        cart.cartitem_cart.create(product=self.product_laptop, quantity=3)
-        cart.cartitem_cart.create(product=self.product_phone, quantity=9)
-        CartItem.objects.create(cart=cart, product=self.product_laptop, quantity=4)
+        cart.cart_item_cart.create(product=self.product_laptop, quantity=3, price=10000, price_pay=10000)
+        cart.cart_item_cart.create(product=self.product_phone, quantity=9, price=8000, price_pay=8000)
+        CartItem.objects.create(cart=cart, product=self.product_laptop, quantity=4, price=10000, price_pay=10000)
         cart.save()
-        self.assertEqual(cart.total_quantity, 16)
+        print(cart.cart_item_cart.all())
+        self.assertEqual(cart.quantity, 16)
         self.assertEqual(cart.price, 142000)
-        self.assertEqual(cart.price_end, 142000)
+        self.assertEqual(cart.price_pay, 142000)
 
 
 class TestCartItem(TestCase):

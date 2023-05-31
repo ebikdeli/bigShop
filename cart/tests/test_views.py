@@ -14,14 +14,58 @@ class CartViewTest(TestCase):
         self.user = get_user_model().objects.create(**user_data)
         self.product = Product.objects.create(name='Samsung s21', price=200000, stock=10)
     
-    def test_add_to_cart_view(self):
+    def test_add_to_cart_view_success(self):
         """Test if add_product_cart view works fine"""
         url = reverse('cart:add-product-cart')
-        print(self.product.stock)
+        # print(self.product.stock)
         # !! https://stackoverflow.com/questions/42521230/how-to-escape-curly-brackets-in-f-strings
         post_data = {'data': [f'{{"quantity": 4, "product-id": "{self.product.product_id}"}}']}
         response = self.client.post(url, data=post_data)
-        print(response.status_code)
-        print(response.json())
         self.product.refresh_from_db()
-        print(self.product.stock)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['code'], 201)
+        self.assertEqual(response.json()['status'], 'ok')
+        self.assertEqual(self.product.stock, 10-4)
+    
+    def test_add_to_cart_view_failure(self):
+        """Test if add_product_cart view failed if there is not enough items in the stock"""
+        url = reverse('cart:add-product-cart')
+        post_data = {'data': [f'{{"quantity": 11, "product-id": "{self.product.product_id}"}}']}
+        response = self.client.post(url, data=post_data)
+        self.product.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['code'], 402)
+        self.assertEqual(response.json()['status'], 'nok')
+        self.assertEqual(self.product.stock, 10)
+    
+    def test_change_product_cart_view_success(self):
+        """"Test change_product_cart view"""
+         # Create a Cart and put a product in the Cart
+        cart = Cart.objects.create()
+        cart.cart_item_cart.create(product=self.product, quantity=3, price=30000, price_pay=30000)
+        print(cart.price, '    ', cart.price_pay)
+        url = reverse('cart:change-product-cart')
+        post_data = {'data': [f'{{"quantity": 5, "product-id": "{self.product.product_id}", "cart-id": "{cart.id}"}}']}
+        response = self.client.post(url, data=post_data)
+        self.product.refresh_from_db()
+        print(response.json())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['code'], 201)
+        self.assertEqual(response.json()['status'], 'ok')
+        self.assertEqual(self.product.stock, 10-5)
+    
+    def test_change_product_cart_view_failure(self):
+        """"Test change_product_cart view failed if 'cart-id' is wrong"""
+         # Create a Cart and put a product in the Cart
+        cart = Cart.objects.create()
+        cart.cart_item_cart.create(product=self.product, quantity=3, price=30000, price_pay=30000)
+        print(cart.price, '    ', cart.price_pay)
+        url = reverse('cart:change-product-cart')
+        post_data = {'data': [f'{{"quantity": 5, "product-id": "{self.product.product_id}", "cart-id": "913"}}']}
+        response = self.client.post(url, data=post_data)
+        self.product.refresh_from_db()
+        # print(response.json())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['code'], 402)
+        self.assertEqual(response.json()['status'], 'nok')
+        self.assertEqual(self.product.stock, 10)

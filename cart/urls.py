@@ -8,6 +8,7 @@ app_name = 'cart'
 urlpatterns = [
     # ? To use in API calls
     path('add-product-cart', views.add_product_cart, name='add-product-cart'),
+    path('change-product-cart', views.change_product_cart, name='change-product-cart'),
     
     # ? To use in FullStack
     path('append-product/', views.append_product_to_cart, name='append_product_to_cart'),

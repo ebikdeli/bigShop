@@ -38,18 +38,22 @@ class Cart(models.Model):
     @property
     def price(self):
         """Calculate total price of the current cart"""
+        price = 0
         if not self.cart_item_cart.exists():
-            return 0
-        # Following code is the most brief code to calcualte price of all CartItem of the current Cart
-        return int(self.cart_item_cart.aggregate(price=Sum('price'))['price'])
+            return price
+        for cI in self.cart_item_cart.all():
+            price += int(cI.price * cI.quantity)
+        return price
     
     @property
     def price_pay(self):
         """Calculate total price_pay of the current cart"""
+        price_pay = 0
         if not self.cart_item_cart.exists():
-            return 0
-        # Following code is the most brief code to calcualte price_pay of all CartItem of the current Cart
-        return int(self.cart_item_cart.aggregate(price_pay=Sum('price_pay'))['price_pay'])
+            return price_pay
+        for cI in self.cart_item_cart.all():
+            price_pay += int(cI.price_pay * cI.quantity)
+        return price_pay
     
     @property
     def quantity(self):
@@ -114,49 +118,42 @@ class Cart(models.Model):
 
 
     def change_item_quantity(self, quantity: (str or int), request: HttpRequest,
-                                   cart_item_id: int=None, *args, **kwargs) -> bool:
-        """Change the quantity of an item by its 'cart_item_id' field. At least one of the 'cart_item_id'
+                                   cart_item: object=None, *args, **kwargs) -> bool:
+        """Change the quantity of an item by its 'cart_item_id' field. At least one of the 'cart_item'
         or 'product_id' arguements must be true. If successfully done returns True othrewise returns False."""
-        cartItem_qs = self.cart_item_cart.filter(id=cart_item_id)
-        if not cartItem_qs.exists():
-            return False
-        cartItem = cartItem_qs.get()
-        product = cartItem.product
+        cart_item
+        product = cart_item.product
         # If there is not enough items in the Product.stock, stop the operation
         if product.stock < int(quantity):
             return False
         # Subtract number of added item from product stock
         product.stock -= int(quantity)
         product.save()
-        cartItem.quantity = int(quantity)
-        cartItem.save()
+        cart_item.quantity = int(quantity)
+        cart_item.save()
         # Update 'cart' session with new quantity
         for item in request.session['cart']:
             if item['product_id'] == product.product_id:
                 item['quantity'] = int(quantity)
         # Update session with updated Cart
-        set_session_cart(request, cartItem.cart)
+        set_session_cart(request, cart_item.cart)
         return True
 
 
-    def delete_item(self, request: HttpRequest, cart_item_id: int, *args, **kwargs) -> bool:
-        """Delete an item from the cart by its 'CartItem.id'. If properly executed returns True else False.
+    def delete_item(self, request: HttpRequest, cart_item: object, *args, **kwargs) -> bool:
+        """Delete an item from the cart by its 'CartItem' object. If properly executed returns True else False.
         Oprional: We can add the functionality that be able to delete an item with 'Product.product_id' field."""
-        cartItem_qs = self.cart_item_cart.filter(id=cart_item_id)
-        if not cartItem_qs.exists():
-            return None
-        cartItem = cartItem_qs.get()
-        product = cartItem.product
-        # Add the current 'CartItem.quantity' to 'product.stock' before being deleted
-        product.stock += int(cartItem.quantity)
-        product.save()
-        cartItem.delete()
+        product = cart_item.product
+        # # Add the current 'CartItem.quantity' to 'product.stock' before being deleted
+        # product.stock += int(cartItem.quantity)
+        # product.save()
+        cart_item.delete()
         # Delete current item from 'cart' session
         for item in request.session['cart']:
             if item['product_id'] == product.product_id:
                 request.session['cart'].remove(item)
         # Update 'total_quantity' 'price' and 'price_end' session that automatically updated in the current Cart
-        set_session_cart(request, cartItem.cart)
+        set_session_cart(request, cart_item.cart)
         return True
         
 
