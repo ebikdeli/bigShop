@@ -133,5 +133,28 @@ def delete_item_cart(request):
         data = json.loads(json_data)
         product_id = data.get('product-id', None)
         cart_id = data.get('cart-id', None)
-    
+        if not product_id or not cart_id:
+            return JsonResponse(data={'msg': 'دیتای دریافتی فاقد اعتبار است', 'code': 402, 'status': 'nok'})
+        # get product to be deleted
+        product_qs = Product.objects.filter(product_id=product_id)
+        if not product_qs.exists():
+            return JsonResponse(data={'msg': 'کد محصول انتخاب شده اشتباه است', 'code': 402, 'status': 'nok'})
+        product = product_qs.get()
+        # get the cart that product should get deleted from
+        cart_qs = Cart.objects.filter(id=cart_id)
+        if not cart_qs.exists():
+            return JsonResponse(data={'msg': 'سبد خرید انتخاب شده فاقد اعتبار است', 'code': 402, 'status': 'nok'})
+        cart = cart_qs.get()
+        # get CartItem
+        cart_item_qs = cart.cart_item_cart.filter(product=product)
+        if not cart_item_qs.exists():
+            return JsonResponse(data={'msg': 'آیتم مورد نظر در سبد خرید پیدا نشد', 'code': 402, 'status': 'nok'})
+        cart_item = cart_item_qs.get()
+        # Delete item from the cart
+        result = cart.delete_item(request, cart_item, product)
+        # If there is a problem notify the customer
+        if not result:
+            return JsonResponse(data={'msg': 'مشکلی پیش آمده و آیتم از سبد خرید حذف نشد', 'code': 402, 'status': 'nok'})
+        # If item successfully deleted from the cart, notify the customer
+        return JsonResponse(data={'msg': 'آیتم با موفقیت از سبد خرید حذ شد', 'code': 202, 'status': 'ok'})
     return JsonResponse(data={'msg': 'متد اشتباه است', 'code': 400, 'status': 'nok'})

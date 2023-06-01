@@ -140,13 +140,11 @@ class Cart(models.Model):
         return True
 
 
-    def delete_item(self, request: HttpRequest, cart_item: object, *args, **kwargs) -> bool:
+    def delete_item(self, request: HttpRequest, cart_item: object, product: object, *args, **kwargs) -> bool:
         """Delete an item from the cart by its 'CartItem' object. If properly executed returns True else False.
         Oprional: We can add the functionality that be able to delete an item with 'Product.product_id' field."""
-        product = cart_item.product
-        # # Add the current 'CartItem.quantity' to 'product.stock' before being deleted
-        # product.stock += int(cartItem.quantity)
-        # product.save()
+        # Add the current 'CartItem.quantity' to 'product.stock' before being deleted
+        # ! When CartItem deleted, quantity of CartItem added to the Product.stock
         cart_item.delete()
         # Delete current item from 'cart' session
         for item in request.session['cart']:
