@@ -1,3 +1,4 @@
+# ! Data Validation should be happened in front-end
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.urls import reverse
@@ -32,7 +33,7 @@ def classic_login(request):
             synch_cart_session_cart_after_authentication(Cart, request)
             return JsonResponse(data={'msg': 'ورود با موفقیت انجام گرفت', 'status': 200})
         else:
-            return JsonResponse(data={'msg': 'کاربر در حال حاضر حاضر وجود دارد', 'status': 401})
+            return JsonResponse(data={'msg': 'نام کاربری یا رمز عبور اشتباه است', 'status': 401})
     else:
         return render(request, 'login/signin.html')
 
@@ -55,7 +56,7 @@ def signup(request):
         data = json.loads(json_data)
         new_user = get_user_model().objects.filter(username=data['username'])
         if new_user.exists():
-            return JsonResponse(data={'msg': f'کاربر {data["username"]} در حال حاضر وجود دارد', 'status': 300})
+            return JsonResponse(data={'msg': f'کاربر {data["username"]} در حال حاضر وجود دارد', 'status': 400})
         new_user = get_user_model()(username=data['username'], password=data['password'])
         if user_signup_login(request, new_user):
             # Synchronize Cart data with cart session data after login

@@ -116,13 +116,14 @@ class CartViewTestAuthenticatedUser(TestCase):
     def setUp(self) -> None:
         self.client = Client(False)
         self.user_data = {'username': 'ehsan@gmail.com', 'password': '123456'}
-        self.user = get_user_model().objects.create(**self.user_data)
+        self.user = get_user_model().objects.create_user(**self.user_data)
         self.product = Product.objects.create(name='Samsung s21', price=200000, stock=10)
     
     def test_add_to_cart_view_success(self):
         """Test if authenticated user can add item to its cart"""
-        is_login = self.client.force_login(self.user)
-        self.assertIs(is_login, None)
+        # First login the user
+        is_login = self.client.login(**self.user_data)
+        self.assertIs(is_login, True)
         url = reverse('cart:add-product-cart')
         # !! https://stackoverflow.com/questions/42521230/how-to-escape-curly-brackets-in-f-strings
         post_data = {'data': [f'{{"quantity": 4, "product-id": "{self.product.product_id}"}}']}
