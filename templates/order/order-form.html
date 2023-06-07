@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+    {% block head %}
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/order.css">
+    {% endblock head %}
+    
+
+    {% block title %}
+        فرم تایید سفارش
+    {% endblock title %}
+
+
+    {% block content %}
+    <main class="mx-auto my-5 col-md-8 col-sm-6 col-10" style="font-family: IRANYekan, sans-serif;">
+        <h3 class="pb-4 text-center">مشخصات خود را جهت ثبت سفارش تایید کنید</h3>
+        <form action="" method="post">
+            <div class="d-flex justify-content-around align-items-center flex-wrap" style="gap: 20px;">
+                <div class="d-flex justify-content-around align-items-center flex-wrap col-12">
+                    <div class="mx-auto text-center my-3 col-lg-4 col-md-7 col-10">
+                        <input class="order-form-input form-control" type="text" name="first-name" placeholder="نام کوچک" id="">
+                    </div>
+                    <div class="mx-auto text-center my-3 col-lg-4 col-md-7 col-10">
+                        <input class="order-form-input form-control" type="text" name="last-name" placeholder="نام خانوادگی" id="">
+                    </div>
+                </div>
+                <div class="mx-auto text-center my-3 col-lg-3 col-md-7 col-10">
+                    <input class="order-form-input form-control" type="text" name="email" placeholder="ایمیل" id="">
+                </div>
+                <div class="mx-auto text-center my-3 col-lg-3 col-md-6 col-10">
+                    <input class="order-form-input form-control" type="text" name="phone" placeholder="شماره تماس" id="">
+                </div>
+                <div class="mx-auto text-center my-3 col-lg-3 col-md-6 col-10">
+                    <input class="order-form-input form-control" type="text" name="postal" placeholder="کد پستی" id="">
+                </div>
+                <div class="mx-auto text-center my-3 col-lg-3 col-md-6 col-10">
+                    <input class="order-form-input form-control" type="text" name="state" placeholder="استان" id="">
+                </div>
+                <div class="mx-auto text-center my-3 col-lg-3 col-md-6 col-10">
+                    <input class="order-form-input form-control" type="text" name="city" placeholder="شهر" id="">
+                </div>
+                <div class="mx-auto text-center my-3 col-lg-8 col-md-11 col-12">
+                    <textarea class="text-center form-control" name="" id="" cols="50" rows="3" placeholder="آدرس"></textarea>
+                </div>
+                <div class="my-3 text-center col-12">
+                    <input class="btn btn-primary" type="submit" value="تایید مشخصات">
+                </div>
+            </div>
+        </form>
+    </main>
+    {% endblock content %}
+
+
+
+    <div id="main-footer-separator" class="my-3 mx-auto"></div>
+
+{% block scripts %}
+<script src="./js/order.js" type="module"></script>
+{% endblock scripts %}

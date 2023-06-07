@@ -5,6 +5,8 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator, MaxLengthValidator, MinLengthValidator
 from sorl.thumbnail import ImageField
 
+from order.models import Order
+
 
 class MyUserManager(BaseUserManager):
     """Create custom user manager for our custom User"""
@@ -142,3 +144,11 @@ class Address(models.Model):
 
     def __str__(self):
         return f'{self.user.username}_address({self.id})'
+    
+    @property
+    def orders(self):
+        """Get all current user orders"""
+        order_qs = Order.objects.none()
+        for cart in self.cart_user.all():
+            (order_qs | cart.order_cart.all()).distinct()
+        return order_qs

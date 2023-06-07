@@ -56,3 +56,25 @@ a{
         height: auto;
     }
 }
+
+
+
+/* * order-form page css */
+.order-form-input{
+    text-align: center;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: rgb(186, 183, 183);
+    padding: 7px 10px;
+    background-color: rgb(227, 231, 233);
+}
+
+@media screen and (max-width: 550px) {
+    .order-form-input{
+        width: 100% !important;
+    }
+}
+
+textarea{
+    background-color: rgb(251, 243, 243) !important;
+}

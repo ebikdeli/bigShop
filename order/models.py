@@ -19,6 +19,7 @@ class Order(models.Model):
     discounts = models.DecimalField(verbose_name=_('discounts'), max_digits=8, decimal_places=0, default=0)
     is_paid = models.BooleanField(verbose_name=_('is_paid'), default=False)
     is_received = models.BooleanField(verbose_name=_('has_received'), default=False)
+    is_active = models.BooleanField(verbose_name=_('is_active'), default=True)
     slug = models.SlugField(blank=True)
     created = models.DateTimeField(verbose_name=_("created"), auto_now_add=True)
     updated = models.DateTimeField(verbose_name=_('updated'), auto_now=True)
