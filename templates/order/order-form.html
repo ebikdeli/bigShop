@@ -3,8 +3,8 @@
 
 
     {% block head %}
-    <link rel="stylesheet" href="./css/main.css">
-    <link rel="stylesheet" href="./css/order.css">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/order/order.css' %}">
     {% endblock head %}
     
 
@@ -17,32 +17,37 @@
     <main class="mx-auto my-5 col-md-8 col-sm-6 col-10" style="font-family: IRANYekan, sans-serif;">
         <h3 class="pb-4 text-center">مشخصات خود را جهت ثبت سفارش تایید کنید</h3>
         <form action="" method="post">
+            {% csrf_token %}
             <div class="d-flex justify-content-around align-items-center flex-wrap" style="gap: 20px;">
                 <div class="d-flex justify-content-around align-items-center flex-wrap col-12">
                     <div class="mx-auto text-center my-3 col-lg-4 col-md-7 col-10">
-                        <input class="order-form-input form-control" type="text" name="first-name" placeholder="نام کوچک" id="">
+                        <input class="order-form-input form-control" type="text" name="first_name" placeholder="نام کوچک" value="{{request.user.first_name}}" id="">
                     </div>
                     <div class="mx-auto text-center my-3 col-lg-4 col-md-7 col-10">
-                        <input class="order-form-input form-control" type="text" name="last-name" placeholder="نام خانوادگی" id="">
+                        <input class="order-form-input form-control" type="text" name="last_name" placeholder="نام خانوادگی" value="{{request.user.last_name}}" id="">
                     </div>
                 </div>
                 <div class="mx-auto text-center my-3 col-lg-3 col-md-7 col-10">
-                    <input class="order-form-input form-control" type="text" name="email" placeholder="ایمیل" id="">
+                    <input class="order-form-input form-control" type="text" name="email" placeholder="ایمیل" value="{{request.user.email}}" id="">
                 </div>
                 <div class="mx-auto text-center my-3 col-lg-3 col-md-6 col-10">
-                    <input class="order-form-input form-control" type="text" name="phone" placeholder="شماره تماس" id="">
+                    <input class="order-form-input form-control" type="text" name="phone" placeholder="شماره تماس" value="{{request.user.phone}}" id="">
                 </div>
                 <div class="mx-auto text-center my-3 col-lg-3 col-md-6 col-10">
-                    <input class="order-form-input form-control" type="text" name="postal" placeholder="کد پستی" id="">
+                    <input class="order-form-input form-control" type="text" name="postal" placeholder="کد پستی" id=""
+                    {% if address %}value="{{address.postal}}"{% endif %}>
                 </div>
                 <div class="mx-auto text-center my-3 col-lg-3 col-md-6 col-10">
-                    <input class="order-form-input form-control" type="text" name="state" placeholder="استان" id="">
+                    <input class="order-form-input form-control" type="text" name="state" placeholder="استان" id=""
+                    {% if address %}value="{{address.state}}"{% endif %}>
                 </div>
                 <div class="mx-auto text-center my-3 col-lg-3 col-md-6 col-10">
-                    <input class="order-form-input form-control" type="text" name="city" placeholder="شهر" id="">
+                    <input class="order-form-input form-control" type="text" name="city" placeholder="شهر" id=""
+                    {% if address %}value="{{address.city}}"{% endif %}>
                 </div>
                 <div class="mx-auto text-center my-3 col-lg-8 col-md-11 col-12">
-                    <textarea class="text-center form-control" name="" id="" cols="50" rows="3" placeholder="آدرس"></textarea>
+                    <textarea class="text-center form-control" name="line" id="" cols="50" rows="3" placeholder="آدرس" 
+                    {% if address %}value="{{address.line}}"{% endif %}></textarea>
                 </div>
                 <div class="my-3 text-center col-12">
                     <input class="btn btn-primary" type="submit" value="تایید مشخصات">
@@ -56,6 +61,7 @@
 
     <div id="main-footer-separator" class="my-3 mx-auto"></div>
 
+    
 {% block scripts %}
-<script src="./js/order.js" type="module"></script>
+<script src="{% static 'js/order/order.js' %}" type="module"></script>
 {% endblock scripts %}

@@ -78,12 +78,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(verbose_name=_('first name'),
                                   max_length=50,
                                   blank=True,
-					              null=True,
                                  )
     last_name = models.CharField(verbose_name=_('last name'),
                                  max_length=50,
                                  blank=True,
-					             null=True,
                                  )
     picture = ImageField(verbose_name=_('user picture'), blank=True)
     score = models.IntegerField(verbose_name=_('user score'), default=0)
@@ -128,7 +126,7 @@ class Address(models.Model):
                                 related_name='address_user')
     state = models.CharField(verbose_name=_('province, state or municipality'), max_length=50, blank=True)
     city = models.CharField(verbose_name=_('city'), max_length=50, blank=True)
-    line = models.TextField(verbose_name=_('line'), blank=True, null=True)
+    line = models.TextField(verbose_name=_('line'), blank=True)
     code = models.CharField(verbose_name=_('code'), blank=True, max_length=3,
                             validators=[MaxLengthValidator(4, _('phone code cannot be longer than 4 chars')),
                                         MinLengthValidator(2, _('phone code cannot be shorter than 2 chars'))])
