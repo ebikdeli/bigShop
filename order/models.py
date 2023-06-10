@@ -1,10 +1,12 @@
-from typing import Any
+from typing import Any, Iterable, Optional
 from django.db import models
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 
 from product.models import ColorPrice
 from _resources import func
+import uuid
 
 
 class Order(models.Model):
@@ -128,3 +130,43 @@ class OrderItem(models.Model):
             if cp.exists():
                 price_pay += cp.get().extra_price
         return price_pay
+
+
+class Shipment(models.Model):
+    """Every order must have a shipment model"""
+    shipment_id = models.UUIDField(verbose_name=_('shipment_id'), default=uuid.uuid4, unique=True, editable=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             verbose_name=_('user'),
+                             related_name='shipment_user',
+                             on_delete=models.SET_NULL,
+                             blank=True,
+                             null=True)
+    address = models.ForeignKey('accounts.Address',
+                                verbose_name=_('address'),
+                                related_name='shipment_address',
+                                on_delete=models.SET_NULL,
+                                blank=True,
+                                null=True)
+    order = models.OneToOneField('Order',
+                                 verbose_name=_('order'),
+                                 related_name='shipment_order',
+                                 on_delete=models.CASCADE)
+    cost = models.DecimalField(verbose_name=_('cost'), decimal_places=0, max_digits=8, default=15000)
+    company = models.CharField(verbose_name=_('company'), max_length=30, blank=True)
+    is_send = models.BooleanField(verbose_name=_('is_send'), default=False)
+    is_received = models.BooleanField(verbose_name=_('is_received'), default=False)
+    slug = models.SlugField(verbose_name=_('slug'), blank=True)
+    created = models.DateTimeField(verbose_name=_('created'), auto_now_add=True)
+    updated = models.DateTimeField(verbose_name=_('updated'), auto_now=True)
+    
+    class Meta:
+        verbose_name = 'Shipment'
+        verbose_name_plural = 'Shipment'
+    
+    def __str__(self) -> str:
+        return str(self.shipment_id)
+    
+    def save(self, *args, **kwargs) -> None:
+        if not self.slug:
+            self.slug = slugify(self.shipment_id)
+        return super().save(*args, **kwargs)

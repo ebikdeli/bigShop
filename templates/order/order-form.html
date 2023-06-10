@@ -16,7 +16,11 @@
     {% block content %}
     <main class="mx-auto my-5 col-md-8 col-sm-6 col-10" style="font-family: IRANYekan, sans-serif;">
         <h3 class="pb-4 text-center">مشخصات خود را جهت ثبت سفارش تایید کنید</h3>
-        <form action="" method="post">
+        {% comment %} If there are any errors in the form validation show them here {% endcomment %}
+        <div class='order-form-error text-center my-1'>
+
+        </div>
+        <form action="" method="post" id="order-form">
             {% csrf_token %}
             <div class="d-flex justify-content-around align-items-center flex-wrap" style="gap: 20px;">
                 <div class="d-flex justify-content-around align-items-center flex-wrap col-12">

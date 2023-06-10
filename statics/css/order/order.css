@@ -78,3 +78,13 @@ a{
 textarea{
     background-color: rgb(251, 243, 243) !important;
 }
+
+
+.order-form-error{
+    color: red !important;
+    font-size: 14px;
+}
+
+.order-form-error small{
+    display: block;
+}
