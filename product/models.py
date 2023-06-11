@@ -96,6 +96,7 @@ class Product(models.Model):
     describe = models.TextField(verbose_name=_('describe'), blank=True)
     review = models.TextField(verbose_name=_('review'), blank=True)
     # Customized 'upload to' will be added to 'background'
+    main_image = ImageField(verbose_name=_('main image'), blank=True)
     background = ImageField(verbose_name=_('background image'), blank=True)
     # ContentType 'images' will be added
     color = models.ManyToManyField('Color',

@@ -13,10 +13,10 @@
 {% endblock title %}
 
 
-    {% block content %}
+{% block content %}
         <main class="m-auto py-5" style="font-family: IRANYekan, sans-serif;">
             {% comment %} If there is no order or no item in the order show below block {% endcomment %}
-            {% if order_found > 1 %}
+            {% if order_found < 1 %}
                 <div id="no--order--exist">
                     <div class="mx-auto my-3 text-center">
                         <img src="{% static 'images/empty-cart.png' %}" style="width: 50%; height: auto;" alt="">
@@ -97,52 +97,37 @@
                             </div>
                         </div>
 
-                        <!-- * (Start) Loop for product -->
+                        {% comment %} (Start) Loop for product {% endcomment %}
+                        {% for item in order.order_item_order.all %}
                         <div class="order--product--row d-flex justify-content-center align-items-center text-center mx-auto my-4" style="width: 100%;">
                             <div style="width: 400px;" class="order-product order--product--image d-flex justify-content-center align-items-center">
-                                <img src="./images/laptop_PNG101812.png" style="width: 200px; height: 140px;" class="m-0">
+                                <img src="{{ item.main_image.url }}" style="width: 200px; height: 140px;" class="m-0">
                             </div>
                             <div style="width: 350px;" class="order-product order--product--name d-flex justify-content-center align-items-center flex-column flex-wrap">
-                                <p class="m-0 py-1" style="font-size: 20px; font-weight:600;">HP (hewlett packard)</p>
-                                <p class="m-0 py-1" style="font-size: 18px; font-weight:500;">لپ تاپ اچ پی مدل جدید</p>
+                                <p class="m-0 py-1" style="font-size: 20px; font-weight:600;">{{ item.product.brand.name }}</p>
+                                <p class="m-0 py-1" style="font-size: 18px; font-weight:500;">{{ item.product.name }}</p>
                             </div>
                             <div style="width: 250px;" class="order-product order--product--unit d-flex justify-content-center align-items-center">
-                                <p class="m-0">40000</p>
+                                <p class="m-0">{{ item.product.price }}</p>
                             </div>
                             <div style="width: 150px;" class="order-product order--product--unit d-flex justify-content-center align-items-center">
-                                <p class="m-0">2</p>
+                                <p class="m-0">{{ item.quantity }}</p>
                             </div>
                             <div style="width: 250px;" class="order-product order--product--unit d-flex justify-content-center align-items-center">
-                                <p class="m-0">80000</p>
+                                <p class="m-0">{{ item.price_pay }}</p>
                             </div>
                         </div>
-                        <!-- * (End) Loop for product -->
-                        <div class="order--product--row d-flex justify-content-center align-items-center text-center mx-auto my-4" style="width: 100%;">
-                            <div style="width: 400px;" class="order-product order--product--image d-flex justify-content-center align-items-center">
-                                <img src="./images/server_PNG45.png" style="width: 200px; height: 140px;" class="m-0">
-                            </div>
-                            <div style="width: 350px;" class="order-product order--product--name d-flex justify-content-center align-items-center flex-column flex-wrap">
-                                <p class="m-0 py-1" style="font-size: 20px; font-weight:600;">Lenovo</p>
-                                <p class="m-0 py-1" style="font-size: 18px; font-weight:500;">سرور لنوو مدل lab-nd</p>
-                            </div>
-                            <div style="width: 250px;" class="order-product order--product--unit d-flex justify-content-center align-items-center">
-                                <p class="m-0">70000</p>
-                            </div>
-                            <div style="width: 150px;" class="order-product order--product--unit d-flex justify-content-center align-items-center">
-                                <p class="m-0">3</p>
-                            </div>
-                            <div style="width: 250px;" class="order-product order--product--unit d-flex justify-content-center align-items-center">
-                                <p class="m-0">210000</p>
-                            </div>
-                        </div>
+                        {% endfor %}
+                        {% comment %} (End) Loop for product {% endcomment %}
+                        
                     </div>
                 </div>
             </div>
             {% endif %}
         </main>
-    {% endblock content %}
+{% endblock content %}
 
-    <div id="main-footer-separator" class="my-3 mx-auto"></div>
+<div id="main-footer-separator" class="my-3 mx-auto"></div>
 
 
 
