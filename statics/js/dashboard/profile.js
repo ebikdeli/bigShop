@@ -1,6 +1,6 @@
-import {sendPostData} from './ajax.js';
-import {validateEmail} from './functions.js';
-import getCookie from './csrftoken.js';
+import {sendPostData} from '../ajax.js';
+import {validateEmail} from '../functions.js';
+import getCookie from '../csrftoken.js';
 
 
 
@@ -100,23 +100,26 @@ changePasswordForm.addEventListener('submit', e => {
 
     // * Send data to server
     if(passwordChangeDataValidation()){
-        const url = 'http://127.0.0.1:8000/password-change';
+        const url = 'http://127.0.0.1:8000/login/password-change';
         const data = {password: currentPassword, 'new-password': newPassword};
         const error = 'پیام ارسال نشد';
         sendPostData(url, data, error)
         .then(data => {
             console.log(data);
-            if(data.status == 200){
-                changePasswordResult.innerText = 'تغییر رمز با موفقیت انجام شد';
+            changePasswordResult.innerText = data['msg'];
+            if(data.code == 200 && data.status == 'ok'){
                 changePasswordResult.style.color = 'green';
+                // changePasswordResult.innerText = 'تغییر رمز با موفقیت انجام شد';
             }
             else{
-                changePasswordResult.innerText = 'تغییر رمز انجام نشد';
                 changePasswordResult.style.color = 'red';
+                // changePasswordResult.innerText = 'تغییر رمز با موفقیت انجام نگرفت';
             }
         })
         .catch(err => {
             console.log(err);
+            changePasswordResult.innerText = err;
+            changePasswordResult.style.color = 'red';
         })
     }
 })
@@ -203,12 +206,12 @@ profileEditForm.addEventListener('submit', e => {
     }
     // If there is no error in validation, send data to server
     else{
-        let url = 'http://127.0.0.1:8000/edit-profile';
-        let errMsg = 'داده ها به خوبی ارسال نشد';
+        let url = 'http://127.0.0.1:8000/login/edit_profile';
+        let errMsg = 'داده ها به درستی ارسال نشد';
         sendPostData(url, changedData, errMsg)
         .then(data => {
             console.log(data);
-            if(data.status == 200){
+            if(data.code == 200 | data.status == 'ok'){
                 editProfileResult.style.color = 'green';
                 editProfileResult.innerText = 'پروفایل با موفقیت آپدیت شد';
             }

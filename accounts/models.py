@@ -114,8 +114,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self) -> str:
         return self.username
     
-    def get_absolute_url(self):
-        pass
+    @property
+    def orders(self):
+        """Get all current user orders"""
+        # print(self.cart_user.first().order_cart.all())
+        order_qs = Order.objects.none()
+        for cart in self.cart_user.all():
+            order_qs = (order_qs | cart.order_cart.all()).distinct()
+        return order_qs
 
 
 class Address(models.Model):
@@ -142,11 +148,3 @@ class Address(models.Model):
 
     def __str__(self):
         return f'{self.user.username}_address({self.id})'
-    
-    @property
-    def orders(self):
-        """Get all current user orders"""
-        order_qs = Order.objects.none()
-        for cart in self.cart_user.all():
-            (order_qs | cart.order_cart.all()).distinct()
-        return order_qs

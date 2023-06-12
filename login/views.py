@@ -1,7 +1,7 @@
 # ! Data Validation should be happened in front-end
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from django.urls import reverse
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -22,7 +22,7 @@ def classic_login(request):
     if request.method == 'POST':
         data_json = request.POST['data']
         if not data_json:
-            return JsonResponse(data={'msg': 'اطلاعاتی دریافت نشد', 'status': 400})
+            return JsonResponse(data={'msg': 'اطلاعاتی دریافت نشد', 'status': 'nok', 'code': 400})
         data = json.loads(data_json)
         user = authenticate(request,
                             username=data['username'],
@@ -31,9 +31,9 @@ def classic_login(request):
             login(request, user)
             # Synchronize Cart data with cart session data after login
             synch_cart_session_cart_after_authentication(Cart, request)
-            return JsonResponse(data={'msg': 'ورود با موفقیت انجام گرفت', 'status': 200})
+            return JsonResponse(data={'msg': 'ورود با موفقیت انجام گرفت', 'status': 'ok', 'code': 200})
         else:
-            return JsonResponse(data={'msg': 'نام کاربری یا رمز عبور اشتباه است', 'status': 401})
+            return JsonResponse(data={'msg': 'نام کاربری یا رمز عبور اشتباه است', 'status': 'nok','code': 401})
     else:
         return render(request, 'login/signin.html')
 
@@ -52,36 +52,45 @@ def signup(request):
     if request.method == 'POST':
         json_data = request.POST.get('data', None)
         if not json_data:
-            return JsonResponse(data={'msg': 'no data received'})
+            return JsonResponse(data={'msg': 'داده ای دریافت نشد', 'status': 'nok', 'code': 401})
         data = json.loads(json_data)
         new_user = get_user_model().objects.filter(username=data['username'])
         if new_user.exists():
-            return JsonResponse(data={'msg': f'کاربر {data["username"]} در حال حاضر وجود دارد', 'status': 400})
+            return JsonResponse(data={'msg': f'کاربر {data["username"]} در حال حاضر وجود دارد', 'status': 'nok', 'code': 400})
         new_user = get_user_model()(username=data['username'], password=data['password'])
         if user_signup_login(request, new_user):
             # Synchronize Cart data with cart session data after login
             synch_cart_session_cart_after_authentication(Cart, request)
             # If user created successfully, direct him/her to his/her newly created profile
-            return JsonResponse(data={'msg': f"کاربر جدید ساخته شد", 'status': 201})
+            return JsonResponse(data={'msg': f"کاربر جدید ساخته شد", 'status': 'ok', 'code': 201})
         # If there is a problem in 'user_signup_login' (eg: user could not login the website) redirect
         # the user to the main page
-        return JsonResponse(data={'msg': 'کاربر جدید ایجاد شد اما لاگین انجام نشد', 'status': 301})
+        return JsonResponse(data={'msg': 'کاربر جدید ایجاد شد اما لاگین انجام نشد', 'status': 'nok', 'code': 301})
     # If any method used except for 'POST', redirect user to 'login_signup' view
     else:
         return render(request, 'login/signup.html')
 
 
 @login_required
-def change_password(request):
+def password_change(request):
     """Handles changing of user password"""
     if request.method == 'POST':
-        password_change_form = UserPasswordChangeForm(request.POST)
-        # Form validation and other needed processes are implemented in 'user_password_change' function 
-        if user_password_change(request, password_change_form):
-            # If password change was a success, redirect user to the main page
-            return redirect('login:profile')
-        # If there is a problem in changing password in 'user_password_change' function, redirect user to this view again
-        redirect('login:change_password')
+        json_data = request.POST.get('data', None)
+        if not json_data:
+            return JsonResponse(data={'msg': 'داده ای دریافت نشد', 'status': 'nok', 'code': 400})
+        data = json.loads(json_data)
+        print(data)
+        user = authenticate(request, username=request.user.username, password=data['password'])
+        if not user:
+            return JsonResponse(data={'msg': 'رمز عبور اشتباه است', 'status': 'nok', 'code': 402})
+        # If current password is valid, change user password with new-password
+        user.password = make_password(data['new-password'])
+        # user.save()
+        return JsonResponse(data={'msg': 'رمز عبور با موفقیت تغییر داده شد', 'status': 'ok', 'code': 200})
+    # Any request method except for the 'POST" resulted in following error
     else:
-        password_change_form = UserPasswordChangeForm()
-    return render(request, 'login/templates/password_change.html', {'password_change_form': password_change_form})
+        return JsonResponse(data={'msg': 'متد درخواستی اشتباه است', 'status': 'nok', 'code': 401})
+
+
+def edit_profile(request):
+    """Edit user profile from dashboard"""

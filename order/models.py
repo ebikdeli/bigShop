@@ -54,7 +54,7 @@ class Order(models.Model):
         price = 0
         if self.order_item_order.exists():
             for order_item in self.order_item_order.all():
-                price += int(order_item.price * order_item.quantity)
+                price += int(order_item.price)
         return price
     
     @property
@@ -63,7 +63,7 @@ class Order(models.Model):
         price_pay = 0
         if self.order_item_order.exists():
             for order_item in self.order_item_order.all():
-                price_pay += int(order_item.price_pay * order_item.quantity)
+                price_pay += int(order_item.price_pay)
         price_pay -= self.discounts
         return price_pay if price_pay > 0 else 0
     
@@ -124,7 +124,7 @@ class OrderItem(models.Model):
     def price_pay(self):
         """Get price_pay of the orderitem by effecting the product discount and posible color price gap"""
         # price_pay = self.quantity * (self.product.price - self.product.discount)
-        price_pay = self.price() - (self.product.discount * self.product.quantity)
+        price_pay = self.price - (self.product.discount * self.quantity)
         if self.color:
             cp = ColorPrice.objects.filter(product=self.product, color=self.color)
             if cp.exists():
