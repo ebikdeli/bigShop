@@ -79,7 +79,6 @@ def password_change(request):
         if not json_data:
             return JsonResponse(data={'msg': 'داده ای دریافت نشد', 'status': 'nok', 'code': 400})
         data = json.loads(json_data)
-        print(data)
         user = authenticate(request, username=request.user.username, password=data['password'])
         if not user:
             return JsonResponse(data={'msg': 'رمز عبور اشتباه است', 'status': 'nok', 'code': 402})
@@ -94,3 +93,11 @@ def password_change(request):
 
 def edit_profile(request):
     """Edit user profile from dashboard"""
+    if request.method == 'POST':
+        json_data = request.POST.get('data', None)
+        if not json_data:
+            return JsonResponse(data={'msg': 'داده ای دریافت نشد', 'status': 'nok', 'code': 400})
+        data = json.loads(json_data)
+        
+    # If any method requested except for POST returns following response
+    return JsonResponse(data={'msg': 'متد اشتباهی ارسال شده', 'status': 'nok', 'code': 400})
