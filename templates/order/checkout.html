@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                             <div id="payment--button--separator" class="pb-1">
-                                <a href="./success_pay.html">
+                                <a href="{% url 'payment:payment-request' order_id=order.order_id %}">
                                     <button class="btn btn-success mx-auto mt-1 mb-3 d-flex justify-content-around align-items-center" id="order--payment--button" style="font-size: 22px; direction: rtl;">
                                         <p class="my-0 px-2">پرداخت</p>
                                         <i class="bi bi-credit-card-2-back d-block px-2"></i>

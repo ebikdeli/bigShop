@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+{% endblock head %}
+    
+
+{% block title %}
+    پرداخت
+{% endblock title %}
+
+
+{% block content %}
+<h3 class='text-center mt-4 mb-3'>درگاه پرداخت را انتخاب کنید</h3>
+<h5 class='text-center pt-4 pb-5'>
+    <span>مبلغ تراکنش:</span>&nbsp;
+    <span style='font-weight: 700;'>{{ order.price_pay }}</span>&nbsp;
+    <span>تومان</span>
+</h5>
+<div class='mx-auto text-center py-4 d-flex justify-content-center align-items-center flex-wrap' style='gap: 35px;'>
+    <div>
+        <a href="{% url 'payment:zarrin-pal' order_id=order.order_id %}">
+            <img src="{% static 'images/zarin-payx.png' %}" alt="درگاه زرین پال"
+            style='width: 250px;'>
+        </a>
+    </div>
+    <div>
+        <a href="{% url 'payment:next-pay' order_id=order.order_id %}">
+            <img src="{% static 'images/nextpay-pay-button.png' %}" alt="درگاه نکست پی"
+            style='width: 250px;'>
+        </a>
+    </div>
+</div>
+{% endblock content %}
