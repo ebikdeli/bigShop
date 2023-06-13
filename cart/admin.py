@@ -6,18 +6,19 @@ from .models import Cart, CartItem
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
     """Cart admin panel has changed"""
-    list_display = ['user', 'price', 'is_paid', 'is_active', 'updated']
-    fields = ['user', 'price', 'session_key', ('is_paid', 'is_active'), 'slug', ('created', 'updated'),'items']
-    readonly_fields = ['session_key', 'price', 'created', 'updated', 'items']
+    list_display = ['user', 'price_pay', 'quantity', 'is_paid', 'is_active', 'updated']
+    fields = ['user','session_key', ('price', 'price_pay', 'quantity'), ('is_paid', 'is_active'), 'slug', ('created', 'updated'), 'items']
+    readonly_fields = ['session_key', 'created', 'updated', 'items', 'price', 'price_pay', 'quantity']
     
     @admin.display(boolean=False, description='cart items')
     def items(self, obj):
         """This field used to show all cart_items belong to this cart"""
         items = list()
-        for items in obj.cart_item_cart.all():
-            items.append(items)
+        for item in obj.cart_item_cart.all():
+            items.append(item.product.name)
         if not items:
             return 'No items in the cart'
+        print(items)
         return items
 
 
