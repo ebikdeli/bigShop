@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<link rel="stylesheet" href="{% static 'css/support/support.css' %}">
+{% endblock head %}
+
+
+
+
+
+{% block title %}
+درباره ما
+{% endblock title %}
+
+
+
+{% block content %}
+<main class="mx-auto py-2">
+    <h3 class="mt-4 mb-3">بیگشاپ عرضه کننده انواع وسایل الکترونیکی و خانگی می باشد که در سال 1402 تاسیس شده و به واسطه راهکارهای دیجیتال در عرضه محصولات مدرن رشد سریعی داشته است</h3>
+    <h3 class="my-5">راههای ارتباطی با ما</h3>
+    <div class="address-phone my-4 d-flex justify-content-start align-items-center">
+      <i class="bi bi-geo-alt"></i>
+      <p>آدرس: تهران خیابان شریعتی پلاک 50</p>
+    </div>
+    <div>
+      <iframe class="mx-auto" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3237.885364586473!2d51.44889272509068!3d35.75362227649884!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8e040c6af8af45%3A0xb53f2cc06e7cf4d5!2sDistrict%203%20Municipality%20of%20Tehran!5e0!3m2!1sen!2s!4v1686750924803!5m2!1sen!2s" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+    <br>
+    <div class="my-4 d-flex justify-content-start align-items-center flex-wrap" style="gap: 50px;">
+      <div class="address-phone d-flex justify-content-start align-items-center">
+        <i class="bi bi-telephone"></i>
+        <p>شماره تماس شرکت: 02144556677</p>
+      </div>
+      <div class="address-phone d-flex justify-content-start align-items-center">
+        <i class="bi bi-phone"></i>
+        <p>شماره همراه: 09124445566</p>
+      </div>
+    </div>
+  </main>
+{% endblock content %}
+
+
+
+{% block scripts %}
+
+{% endblock scripts %}

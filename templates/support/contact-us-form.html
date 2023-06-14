@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<link rel="stylesheet" href="{% static 'css/support/support.css' %}">
+{% endblock head %}
+
+
+
+
+
+{% block title %}
+فرم تماس با ما
+{% endblock title %}
+
+
+
+{% block content %}
+<main class="mx-auto py-3" style="min-height: 100vh;">
+    <h3 class="my-3">لطفا نظرات، انتقادات و پیشنهادات خود را برای ما ارسال کنید. آدرس و شماره تماس را در
+        <a href="./about-us.html">این لینک</a>
+        دریافت کنید
+    </h3>
+    <form id="contact-us-form" class="mx-auto my-5 col-xl-5 col-lg-7 col-md-9 col-11" action="" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">نام</label>
+            <input type="text" name="name" class="form-control">
+            <div class="form-text">وارد کردن نام خود اختیاری است</div>
+        </div>
+        <div class="subject-error mt-3">
+
+        </div>
+        <div class="mb-3">
+            <label class="form-label">موضوع پیام</label>
+            <input type="text" name="subject" class="form-control">
+        </div>
+        <div class="message-error mt-3">
+
+        </div>
+        <div class="mb-3">
+            <label class="form-label">پیام</label>
+            <textarea class="form-control" name="message" rows="3"></textarea>
+        </div>
+        <div class="my-4 mx-auto text-center">
+            <input type="submit" class="btn btn-primary" value="ارسال">
+        </div>
+    </form>
+  </main>
+    <h3 class="my-3">لطفا نظرات، انتقادات و پیشنهادات خود را برای ما ارسال کنید. آدرس و شماره تماس را در
+        <a href="{% url 'support:about-us'  %}">این لینک</a>
+        دریافت کنید
+    </h3>
+    <form class="mx-auto my-5 col-xl-5 col-lg-7 col-md-9 col-11" action="" method="post">
+        <div class="mb-3">
+            <label class="form-label">نام</label>
+            <input type="name" class="form-control">
+            <div class="form-text">وارد کردن نام خود اختیاری است</div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">موضوع پیام</label>
+            <input type="name" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">پیام</label>
+            <textarea class="form-control" rows="3"></textarea>
+        </div>
+        <div class="my-4 mx-auto text-center">
+            <input type="submit" class="btn btn-primary" value="ارسال">
+        </div>
+    </form>
+  </main>
+{% endblock content %}
+
+
+
+{% block scripts %}
+<script src="{% static 'js/support/contact-us-form.js' %}"></script>
+{% endblock scripts %}

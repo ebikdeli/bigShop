@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<link rel="stylesheet" href="{% static 'css/support/support.css' %}">
+{% endblock head %}
+
+
+
+
+
+{% block title %}
+سوالات متداول
+{% endblock title %}
+
+
+
+{% block content %}
+<main class="mx-auto py-3" style="min-height: 100vh;">
+    {% if faqs %}
+    <h2 class="my-5 py-2">سوالات متداول. در صورتیکه پرسشی دارید می توانید در صفحه
+        <a href="{% url 'support:contact-form' %}">تماس با ما</a>
+        سوال خود را مطرح کنید</h2>
+    {% for faq in faqs %}
+    <div class="faq-list my-5">
+      <p class="faq-question">
+        <span>{{ forloop.counter }}-</span>&nbsp;<span>{{ faq.question }}</span><span>؟</span>
+      </p>
+      <p class="faq-answer">
+        <span>پاسخ</span><span>:</span>&nbsp;<span>{{ faq.answer }}</span>
+      </p>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class='my-5'>
+        <h3>هیچ سوال متداولی وجود ندارد</h3>
+    </div>
+    {% endif %}
+  </main>
+{% endblock content %}
+
+
+
+{% block scripts %}
+
+{% endblock scripts %}

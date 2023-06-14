@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
+<link rel="stylesheet" href="{% static 'css/support/support.css' %}">
+{% endblock head %}
+
+
+
+
+
+{% block title %}
+تشکر از پیام شما
+{% endblock title %}
+
+
+
+{% block content %}
+<main class="mx-auto py-2" style="min-height: 100vh;">
+    <h3 class="my-5">از پیام شما سپاسگذاریم. نظرات و بازخوردهای شما برای موفقیت ما حیاتی است</h3>
+    <a href="{% url 'vitrin:index' %}">
+        <button class="text-center btn btn-primary">بازگشت به صفحه اصلی</button>
+    </a>
+    </div>
+  </main>
+{% endblock content %}
+
+
+
+{% block scripts %}
+
+{% endblock scripts %}

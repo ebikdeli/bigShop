@@ -1,14 +1,14 @@
 @media only screen and (width >= 750px){
     main{
-        height: 100vh;
+        min-height: 100vh;
     }
 }
 
-@media only screen and (width < 750px){
+/* @media only screen and (width < 750px){
     main{
         min-height: 600px;
     }
-}
+} */
 
 .profile-content-box > section{
     border-radius: 7px;
