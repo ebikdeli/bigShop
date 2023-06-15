@@ -13,7 +13,7 @@
 {% endblock title %}
 
 {% block content %}
-    <main class="mx-auto py-5 mb-3 mb-0 d-flex justify-content-center align-items-md-start"
+    <main class="mx-auto py-5 mb-5 d-flex justify-content-center align-items-md-start"
         style="font-family: IRANYekan, sans-serif;">
 
         <div class="profile-content-box mx-auto my-4 col-md-9 col-11 d-flex flex-md-row flex-column">
@@ -103,7 +103,13 @@
                                 </label>
                                 <div class="mb-3 d-flex justify justify-content-center align-items-center">
                                     <div style="width: 150px; height: 150px;">
-                                        <img src="{% static 'statics/images/generic-profile-image.svg' %}" id="profile-edit-current-image" alt=""
+                                        <img
+                                        {% if request.user.picture %}
+                                        src="{{ request.user.picture.url }}"
+                                        {% else %}
+                                        src="{% static 'statics/images/generic-profile-image.svg' %}"
+                                        {% endif %}
+                                        id="profile-edit-current-image" alt=""
                                             style="width: 100%; height: 100%; border: 1px; border-color: rgb(214, 27, 27); border-radius: 50%">
                                     </div>
                                 </div>
@@ -117,7 +123,7 @@
                                         <input type="file" name="image" src="" alt="" id="upload-profile-image">
                                         بارگذاری تصویر جدید
                                     </label>
-                                    <button id="verify-new-image" class="d-none btn btn-info ms-1" style="font-size: 18px;">
+                                    <button id="verify-new-image" class=" btn btn-info ms-1" style="font-size: 18px;">
                                         ذخیره
                                     </button>
                                 </div>

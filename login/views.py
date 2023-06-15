@@ -103,21 +103,42 @@ def edit_profile(request):
         fields_number = 0
         # Check if address data changed
         address = request.user.address_user.first()
-        if data['address'] != address.line:
-            address.line = data['address']
-            address.save()
-            fields_number += 1
+        try:
+            if data['address'] != address.line:
+                address.line = data['address']
+                address.save()
+                fields_number += 1
+                data.pop('address')
+        except KeyError:
+            pass
         # Check if user data changed
+        user = get_user_model().objects.get(id=request.user.id)
+        # ? Instead fo below for block, we can use this line: "request.user.__dict__.update(**data)"
         for k, new_value in data.items():
-            for field, old_value in get_user_model().objects.get(id=request.user.id).__dict__.items():
+            for field, old_value in user.__dict__.items():
                 if k == field:
                     print(field, ' ===> ', old_value)
                     print(field, ' ===> ', new_value)
                     fields_number += 1
+                    user.__dict__[field] = new_value
         if fields_number:
-            print(fields_number)
+            user.save()
             return JsonResponse(data={'msg': 'اطلاعات شما با موفقیت تغییر کرد', 'status': 'ok', 'code': 200})
         # If there are no fields to change, return below message
         return JsonResponse(data={'msg': 'فیلدی برای تغییر کردن وجود نداشت', 'status': 'nok', 'code': 402})
     # If any method requested except for POST returns following response
     return JsonResponse(data={'msg': 'متد اشتباهی ارسال شده', 'status': 'nok', 'code': 400})
+
+
+@login_required
+def edit_profile_image(request):
+    """Edit user profile image in user dashboard"""
+    if request.method == 'POST':
+        files = request.FILES
+        if not files:
+            return JsonResponse(data={'msg': 'داده ای دریافت نشد', 'status': 'nok', 'code': 401})
+        request.user.picture = files['image']
+        request.user.save()
+        return JsonResponse(data={'msg': 'تصویر با موفقیت تغییر پیدا کرد', 'status': 'ok', 'code': 200})
+    else:
+        return JsonResponse(data={'msg': 'متد اشتباهی ارسال شده', 'status': 'nok', 'code': 400})

@@ -235,6 +235,7 @@ var image = null;
 
 // Upload and show image to user before submit the image
 profileImageInput.addEventListener('change', e => {
+    // profileNewImage.remove(profileNewImage.lastChild);
     image = document.createElement('img');
     image.src = profileImageInput.files[0].name;
     image.width = '150';
@@ -247,7 +248,7 @@ profileImageInput.addEventListener('change', e => {
 // Submit the image verify button
 profileImageVerifyButton.addEventListener('click', e => {
     e.preventDefault();
-    let url = 'http://127.0.0.1:8000/edit-profile-image'
+    let url = 'http://127.0.0.1:8000/login/edit-profile-image'
     // Because the data is a file (not jsonizable) we cannot use 'sendPostData'
     let data = new FormData();
     data.append('image', profileImageInput.files[0]);

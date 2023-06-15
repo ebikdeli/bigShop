@@ -73,5 +73,5 @@ def set_if_social_login_field(sender, instance=None, created=False, **kwargs):
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_address_after_user_created(sender, instance=None, created=False, **kwargs):
     """Create Address model after user signup and created"""
-    if not hasattr(instance, 'address'):
+    if created:
         Address.objects.create(user=instance)
