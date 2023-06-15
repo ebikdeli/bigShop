@@ -206,18 +206,17 @@ profileEditForm.addEventListener('submit', e => {
     }
     // If there is no error in validation, send data to server
     else{
-        let url = 'http://127.0.0.1:8000/login/edit_profile';
+        let url = 'http://127.0.0.1:8000/login/edit-profile';
         let errMsg = 'داده ها به درستی ارسال نشد';
         sendPostData(url, changedData, errMsg)
         .then(data => {
             console.log(data);
+            editProfileResult.innerText = data['msg'];
             if(data.code == 200 | data.status == 'ok'){
                 editProfileResult.style.color = 'green';
-                editProfileResult.innerText = 'پروفایل با موفقیت آپدیت شد';
             }
             else{
                 editProfileResult.style.color = 'red';
-                editProfileResult.innerText = 'پروفایل آپدیت نشد';
             }
             editSubmitButton.disabled = true;
         })

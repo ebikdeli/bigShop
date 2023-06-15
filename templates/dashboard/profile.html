@@ -43,7 +43,7 @@
                                 class="col-lg-5 col-md-7 col-sm-10 col-11 d-flex justify-content-center align-items-center flex-column">
                                 <label>ایمیل</label>
                                 <div class="d-flex justify justify-content-center align-items-center">
-                                    <input type="text" name="email" value="example@gmail.com"
+                                    <input type="text" name="email" value="{{ request.user.email }}"
                                         class="py-1 px-2 text-center edit-profile-form-input" disabled>
                                     <i class="edit-icon bi bi-pen-fill ms-1"></i>
                                 </div>
@@ -54,7 +54,7 @@
                                 class="col-lg-5 col-md-7 col-sm-10 col-11 d-flex justify-content-center align-items-center flex-column">
                                 <label>شماره تماس</label>
                                 <div class="d-flex justify justify-content-center align-items-center">
-                                    <input type="text" name="phone" value=""
+                                    <input type="text" name="phone" value="{{ request.user.phone }}"
                                         class="py-1 px-2 text-center edit-profile-form-input" disabled>
                                     <i class="edit-icon bi bi-pen-fill ms-1"></i>
                                 </div>
@@ -65,7 +65,7 @@
                                 class="col-lg-5 col-md-7 col-sm-10 col-11 d-flex justify-content-center align-items-center flex-column">
                                 <label>نام</label>
                                 <div class="d-flex justify justify-content-center align-items-center">
-                                    <input type="text" name="first-name" value=""
+                                    <input type="text" name="first_name" value="{{ request.user.first_name }}"
                                         class="py-1 px-2 text-center edit-profile-form-input" disabled>
                                     <i class="edit-icon bi bi-pen-fill ms-1"></i>
                                 </div>
@@ -76,7 +76,7 @@
                                 class="col-lg-5 col-md-7 col-sm-10 col-11 d-flex justify-content-center align-items-center flex-column">
                                 <label>نام خانوادگی</label>
                                 <div class="d-flex justify justify-content-center align-items-center">
-                                    <input type="text" name="last-name" value=""
+                                    <input type="text" name="last_name" value="{{ request.user.last_name }}"
                                         class="py-1 px-2 text-center edit-profile-form-input" disabled>
                                     <i class="edit-icon bi bi-pen-fill ms-1"></i>
                                 </div>
@@ -88,7 +88,7 @@
                                 class="col-lg-10 col-md-11 col-sm-12 col-12 d-flex justify-content-center align-items-center flex-column">
                                 <label>آدرس</label>
                                 <div class="d-flex justify justify-content-center align-items-center w-100">
-                                    <input type="text" name="address" value=""
+                                    <input type="text" name="address" value="{{ address.line }}"
                                         class="py-1 w-100 text-center edit-profile-form-input" disabled>
                                     <i class="edit-icon bi bi-pen-fill ms-1"></i>
                                 </div>

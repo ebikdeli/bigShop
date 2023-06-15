@@ -91,13 +91,33 @@ def password_change(request):
         return JsonResponse(data={'msg': 'متد درخواستی اشتباه است', 'status': 'nok', 'code': 401})
 
 
+@login_required
 def edit_profile(request):
     """Edit user profile from dashboard"""
+
     if request.method == 'POST':
         json_data = request.POST.get('data', None)
         if not json_data:
-            return JsonResponse(data={'msg': 'داده ای دریافت نشد', 'status': 'nok', 'code': 400})
+            return JsonResponse(data={'msg': 'داده ای دریافت نشد', 'status': 'nok', 'code': 401})
         data = json.loads(json_data)
-        
+        fields_number = 0
+        # Check if address data changed
+        address = request.user.address_user.first()
+        if data['address'] != address.line:
+            address.line = data['address']
+            address.save()
+            fields_number += 1
+        # Check if user data changed
+        for k, new_value in data.items():
+            for field, old_value in get_user_model().objects.get(id=request.user.id).__dict__.items():
+                if k == field:
+                    print(field, ' ===> ', old_value)
+                    print(field, ' ===> ', new_value)
+                    fields_number += 1
+        if fields_number:
+            print(fields_number)
+            return JsonResponse(data={'msg': 'اطلاعات شما با موفقیت تغییر کرد', 'status': 'ok', 'code': 200})
+        # If there are no fields to change, return below message
+        return JsonResponse(data={'msg': 'فیلدی برای تغییر کردن وجود نداشت', 'status': 'nok', 'code': 402})
     # If any method requested except for POST returns following response
     return JsonResponse(data={'msg': 'متد اشتباهی ارسال شده', 'status': 'nok', 'code': 400})
