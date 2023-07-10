@@ -64,8 +64,10 @@ def add_product_cart(request):
         if not product_qs.exists():
             return JsonResponse(data={'msg': 'محصولی با مشخصه ارسالی یافت نشد', 'code': 402, 'status': 'nok'})
         # * Put product into the cart
+        # Get current Cart
         if request.user.is_authenticated:
             cart_id = request.user.cart_user.first().id
+        # If user is not authenticated we can also get current cart with current 'session_key'
         else:
             try:
                 cart_id = request.session['cart_id']
@@ -95,6 +97,7 @@ def change_product_cart(request):
         data = json.loads(json_data)
         product_id = data.get('product-id', None)
         cart_id = data.get('cart-id', None)
+        # We can also get current Cart using current 'session_key'
         quantity = data.get('quantity', None)
         if not product_id:
             return JsonResponse(data={'msg': 'دیتای ارسالی فاقد اعتبار است', 'code': 402, 'status': 'nok'})
