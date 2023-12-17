@@ -141,7 +141,7 @@ class Shipment(models.Model):
                              on_delete=models.SET_NULL,
                              blank=True,
                              null=True)
-    address = models.ForeignKey('accounts.Address',
+    address = models.ForeignKey('users.Address',
                                 verbose_name=_('address'),
                                 related_name='shipment_address',
                                 on_delete=models.SET_NULL,

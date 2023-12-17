@@ -2,8 +2,6 @@ from .base import *
 
 DEBUG = False
 
-SECRET_KEY = 'django-insecure-yadhs4-b&bm7_e!rm^yxdgi!%!prb)my-gf+9x5)hgw)mec+4c'
-
 # https://docs.djangoproject.com/en/4.0/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['*']   # WILL CHANGE
 # In production if server returns error '400 BAD REQUEST' it means 'ALLOWED_HOSTS' is not

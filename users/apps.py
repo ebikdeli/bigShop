@@ -18,7 +18,7 @@ from django.apps import AppConfig
 
 class AccountsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'accounts'
+    name = 'users'
 
     # If we put this application in a folder named 'apps' with absolute path
     # './apps' to project_base path (where manage.py resides):

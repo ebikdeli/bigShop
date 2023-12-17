@@ -1,8 +1,12 @@
 import os
 from collections import OrderedDict
+from decouple import config
+
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+
+SECRET_KEY = config('SECRET_KEY')
 
 
 INSTALLED_APPS = [
@@ -31,7 +35,7 @@ INSTALLED_APPS = [
     'constance.backends.database',
     'watchman',
 
-    'accounts',
+    'users',
     'login',
     'support',
     'product',
@@ -136,7 +140,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'users.User'
 
 
 LANGUAGE_CODE = 'en-us'
